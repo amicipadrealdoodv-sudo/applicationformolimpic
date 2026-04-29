@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olimpiki za Kwanza za Amani — Athlete Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        :root {
+            --cream: #f5f0e6;
+            --beige: #e8dcc8;
+            --brown-dark: #3d2817;
+            --brown: #5c3d2e;
+            --gold: #c9a227;
+            --gold-light: #e6c86e;
+            --black: #1a1a1a;
+            --accent: #8b4513;
+            --success: #2d6a4f;
+            --error: #9b2226;
+            --online: #2d6a4f;
+            --offline: #9b2226;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: var(--cream);
+            color: var(--brown-dark);
+            line-height: 1.6;
+        }
+
+        .border-pattern {
+            height: 12px;
+            background: repeating-linear-gradient(
+                45deg,
+                var(--brown-dark),
+                var(--brown-dark) 10px,
+                var(--gold) 10px,
+                var(--gold) 20px,
+                var(--cream) 20px,
+                var(--cream) 30px,
+                var(--brown) 30px,
+                var(--brown) 40px
+            );
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--brown-dark) 0%, var(--brown) 100%);
+            color: var(--cream);
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+            border-bottom: 4px solid var(--gold);
+        }
+
+        .olympic-rings {
+            font-size: 2.5rem;
+            letter-spacing: 4px;
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: var(--gold-light);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            font-style: italic;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .event-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+            font-size: 0.95rem;
+        }
+
+        .event-info span {
+            background: rgba(201, 162, 39, 0.2);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            border: 1px solid var(--gold);
+        }
+
+        .lang-toggle {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-toggle button {
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.3rem 0.8rem;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .lang-toggle button:hover, .lang-toggle button.active {
+            background: var(--gold);
+            color: var(--brown-dark);
+        }
+
+        .status-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255,255,255,0.15);
+            padding: 0.35rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-online { color: #90ee90; }
+        .status-online .status-dot { background: #90ee90; }
+
+        .status-offline { color: #ff9999; }
+        .status-offline .status-dot { background: #ff9999; animation: none; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(61, 40, 23, 0.15);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-top: 4px solid var(--gold);
+        }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--brown-dark);
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--beige);
+            padding-bottom: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            color: var(--brown);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select {
+            padding: 0.7rem;
+            border: 2px solid var(--beige);
+            border-radius: 4px;
+            font-family: 'Lato', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            background: var(--cream);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .sports-section {
+            margin-top: 1.5rem;
+        }
+
+        .sports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .sport-card {
+            border: 2px solid var(--beige);
+            border-radius: 6px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            background: white;
+        }
+
+        .sport-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .sport-card.selected {
+            border-color: var(--gold);
+            background: rgba(201, 162, 39, 0.08);
+            box-shadow: 0 0 0 2px var(--gold);
+        }
+
+        .sport-card.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .sport-card .sport-type {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 700;
+            margin-top: 0.3rem;
+        }
+
+        .sport-checkbox {
+            position: absolute;
+            top: 0.8rem;
+            right: 0.8rem;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--gold);
+        }
+
+        .sport-details {
+            margin-top: 1rem;
+            padding: 1.2rem;
+            background: var(--cream);
+            border-radius: 6px;
+            border-left: 4px solid var(--gold);
+            display: none;
+        }
+
+        .sport-details.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .team-members {
+            margin-top: 1rem;
+        }
+
+        .member-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 80px;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+
+        .member-row input {
+            padding: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--brown-dark);
+            color: var(--gold-light);
+        }
+
+        .btn-primary:hover {
+            background: var(--brown);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(61, 40, 23, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: var(--gold);
+            color: var(--brown-dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gold-light);
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert.show { display: block; }
+        .alert-success { background: #d4edda; color: var(--success); border: 1px solid var(--success); }
+        .alert-error { background: #f8d7da; color: var(--error); border: 1px solid var(--error); }
+        .alert-info { background: #d1ecf1; color: #0c5460; border: 1px solid #0c5460; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid var(--beige);
+        }
+
+        th {
+            background: var(--brown-dark);
+            color: var(--gold-light);
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover { background: rgba(201, 162, 39, 0.05); }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-team { background: #e3f2fd; color: #1565c0; }
+        .badge-individual { background: #f3e5f5; color: #6a1b9a; }
+
+        .stats-bar {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background: var(--brown-dark);
+            color: var(--gold);
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .team-name-box {
+            background: white;
+            border: 2px dashed var(--gold);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .team-name-box label {
+            color: var(--brown-dark);
+            font-size: 1rem;
+        }
+
+        .team-name-box input {
+            width: 100%;
+            margin-top: 0.5rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--brown-dark);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: var(--brown-dark);
+            color: var(--cream);
+            margin-top: 3rem;
+            font-family: 'Cinzel', serif;
+        }
+
+        .motto {
+            font-style: italic;
+            color: var(--gold);
+            margin-top: 0.5rem;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(61, 40, 23, 0.4);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--cream);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== SPORT REGISTER STYLES ===== */
+        .register-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .register-card {
+            background: var(--cream);
+            border: 2px solid var(--beige);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .register-card:hover {
+            border-color: var(--gold);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .register-header {
+            background: linear-gradient(135deg, var(--brown-dark), var(--brown));
+            color: var(--gold-light);
+            padding: 1rem;
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .register-header .count {
+            background: var(--gold);
+            color: var(--brown-dark);
+            padding: 0.2rem 0.7rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .register-body {
+            padding: 1rem;
+        }
+
+        .register-team-block {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed var(--beige);
+        }
+
+        .register-team-block:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .register-team-name {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .register-team-name::before {
+            content: "⚜";
+            color: var(--gold);
+        }
+
+        .register-member {
+            font-size: 0.9rem;
+            color: var(--brown-dark);
+            padding: 0.15rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .register-member .role {
+            font-size: 0.75rem;
+            color: var(--brown);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .register-individual {
+            font-size: 0.9rem;
+            color: var(--brown-dark);
+            padding: 0.3rem 0;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dotted var(--beige);
+        }
+
+        .register-individual:last-child {
+            border-bottom: none;
+        }
+
+        .register-individual .info {
+            color: var(--brown);
+            font-size: 0.8rem;
+        }
+
+        .register-empty {
+            color: #888;
+            font-style: italic;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        /* ===== ORGANIZER LOGIN STYLES ===== */
+        .login-icon {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--gold);
+        }
+
+        .login-card {
+            max-width: 450px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .login-card .form-group {
+            text-align: left;
+        }
+
+        .login-card input[type="password"] {
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+
+        .lock-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.4rem; }
+            .form-grid { grid-template-columns: 1fr; }
+            .member-row { grid-template-columns: 1fr; }
+            .event-info { gap: 0.5rem; }
+            .status-badge { position: static; margin-bottom: 1rem; justify-content: center; }
+            .lang-toggle { position: static; margin-bottom: 1rem; justify-content: center; }
+            header { padding-top: 1rem; }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="border-pattern"></div>
+
+    <header>
+        <div class="status-badge status-online" id="statusBadge">
+            <span class="status-dot"></span>
+            <span id="statusText">Online</span>
+        </div>
+        <div class="lang-toggle">
+            <button onclick="setLang('en')" id="btn-en" class="active">EN</button>
+            <button onclick="setLang('sw')" id="btn-sw">SW</button>
+        </div>
+        <div class="olympic-rings">&#9679;&#9679;&#9679;&#9679;&#9679;</div>
+        <h1 data-key="mainTitle">Olimpiki za Kwanza za Amani</h1>
+        <div class="subtitle" data-key="subtitle">Athlete Registration — First Peace Olympic Games</div>
+        <div class="event-info">
+            <span>&#128205; Morijo Secondary School Grounds</span>
+            <span>&#128197; 20–21 June 2026</span>
+        </div>
+    </header>
+
+    <main>
+        <div id="alertBox" class="alert"></div>
+
+        <!-- PUBLIC: Registration Form -->
+        <div class="card">
+            <h2 data-key="formTitle">Athlete Registration Form</h2>
+            <form id="athleteForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label data-key="lblFirstName">First Name *</label>
+                        <input type="text" id="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-key="lblLastName">Last Name *</label>
+                        <input type="text" id="lastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-key="lblEmail">Email *</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-key="lblVillage">Village / Country *</label>
+                        <input type="text" id="village" required placeholder="e.g. Morijo, Arusha, Tanzania">
+                    </div>
+                    <div class="form-group">
+                        <label data-key="lblAge">Age *</label>
+                        <input type="number" id="age" min="12" max="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-key="lblGender">Gender *</label>
+                        <select id="gender" required>
+                            <option value="">—</option>
+                            <option value="M" data-key="optMale">Male</option>
+                            <option value="F" data-key="optFemale">Female</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="sports-section">
+                    <label style="font-size: 1rem; margin-bottom: 0.5rem; display: block;" data-key="lblSports">
+                        Select Sports (maximum 2) *
+                    </label>
+                    <p style="font-size: 0.9rem; color: var(--accent); margin-bottom: 1rem;" data-key="sportNote">
+                        Each athlete may register for a maximum of 2 disciplines.
+                    </p>
+
+                    <div class="sports-grid" id="sportsGrid">
+                        <!-- Generated by JS -->
+                    </div>
+                </div>
+
+                <div id="sportDetailsContainer"></div>
+
+                <div class="actions">
+                    <button type="submit" class="btn btn-primary" id="btnSubmit" data-key="btnRegister">Register Athlete</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetForm()" data-key="btnReset">Cancel</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- ORGANIZER LOGIN GATE -->
+        <div class="card login-card" id="organizerLoginCard">
+            <div class="login-icon">&#128274;</div>
+            <h2 data-key="organizerAccess">Organizer Access</h2>
+            <p style="color: var(--brown); margin-bottom: 1.5rem;" data-key="organizerDesc">
+                Enter the organizer password to view registrations, statistics, and the Sport Register.
+            </p>
+            <div class="form-group" style="max-width: 300px; margin: 0 auto 1rem auto;">
+                <label data-key="password">Password</label>
+                <input type="password" id="orgPassword" data-key="passwordPlaceholder" placeholder="Enter password" onkeydown="if(event.key==='Enter')organizerLogin()">
+            </div>
+            <button class="btn btn-primary" onclick="organizerLogin()" data-key="accessDashboard" style="min-width: 200px;">
+                Access Dashboard
+            </button>
+            <p id="loginError" style="color: var(--error); margin-top: 1rem; display: none; font-weight: 700;" data-key="incorrectPassword">
+                Incorrect password.
+            </p>
+        </div>
+
+        <!-- PRIVATE: Organizer Dashboard (hidden by default) -->
+        <div id="organizerDashboard" style="display: none;">
+            
+            <div class="card">
+                <h2 data-key="listTitle">Registered Athletes</h2>
+
+                <div class="stats-bar">
+                    <div class="stat-box">
+                        <span class="stat-number" id="statTotal">0</span>
+                        <span class="stat-label" data-key="statTotal">Total</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="statTeam">0</span>
+                        <span class="stat-label" data-key="statTeam">Teams</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number" id="statIndividual">0</span>
+                        <span class="stat-label" data-key="statIndividual">Individuals</span>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
+                    <button class="btn btn-secondary" onclick="exportToExcel()" data-key="btnExcel">&#128202; Export Excel</button>
+                    <button class="btn btn-danger btn-small" onclick="clearAll()" data-key="btnClear">&#128465; Clear All</button>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table id="athletesTable">
+                        <thead>
+                            <tr>
+                                <th data-key="thName">Name</th>
+                                <th data-key="thVillage">Village</th>
+                                <th data-key="thSport1">Sport 1</th>
+                                <th data-key="thSport2">Sport 2</th>
+                                <th data-key="thDate">Date</th>
+                                <th data-key="thAction">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="athletesBody">
+                            <tr><td colspan="6" style="text-align:center; color:#888;" data-key="noData">No athletes registered</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SPORT REGISTER -->
+            <div class="card">
+                <h2>&#127942; Sport Register</h2>
+                <p style="color: var(--brown); margin-bottom: 1rem; font-size: 0.95rem;">
+                    Complete roster organized by sport discipline. Teams show all members; individuals are listed separately.
+                </p>
+                <div id="sportRegisterContainer" class="register-grid">
+                    <div class="register-empty">Loading register...</div>
+                </div>
+            </div>
+
+            <div class="lock-bar">
+                <button class="btn btn-danger" onclick="organizerLogout()" style="min-width: 220px;" data-key="lockDashboard">
+                    &#128274; Lock Dashboard
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div data-key="footerTitle">Olimpiki za Kwanza za Amani</div>
+        <div class="motto" data-key="footerMotto">"Peace is built with one heart, one effort, and one dream."</div>
+        <div style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.7;">
+            Sports, Arts, Education, Peace. — Together We Move Forward, Together We Build Peace!
+        </div>
+    </footer>
+
+    <script>
+        // ==================== CONFIG ====================
+        const BIN_ID = '69f23a03aaba882197514709';
+        const API_KEY = '$2a$10$mZ.qMlZMju3bJxDm7vY69u31zv0HwAPxAqBfdfa.Wn25oUJQ76coa';
+        const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+        const ORGANIZER_PASSWORD = 'Amani2026'; // <-- CHANGE THIS PASSWORD
+
+        // ==================== DATA & CONFIG ====================
+        const SPORTS = [
+            { id: 'football', nameEn: 'Football (11 players)', nameSw: 'Mpira wa Miguu (Wachezaji 11)', type: 'team', min: 11 },
+            { id: 'volleyball', nameEn: 'Volleyball', nameSw: 'Mpira wa Wavu', type: 'team', min: 6 },
+            { id: 'relay4x400', nameEn: '4×400m Relay', nameSw: 'Mbio za Kupokezana 4×400m', type: 'team', min: 4 },
+            { id: 'choir', nameEn: 'Choir Singing', nameSw: 'Shindano la Uimbaji (Kwaya)', type: 'team', min: 3 },
+            { id: 'cross', nameEn: 'Cross Country', nameSw: 'Mbio za Nyika', type: 'individual', min: 1 },
+            { id: 'longjump', nameEn: 'Long Jump', nameSw: 'Rukia Mbali', type: 'individual', min: 1 },
+            { id: 'highjump', nameEn: 'High Jump', nameSw: 'Salto in Alto', type: 'individual', min: 1 },
+            { id: 'chess', nameEn: 'Chess', nameSw: 'Chess (Michezo ya Akili)', type: 'individual', min: 1 },
+            { id: 'shotput', nameEn: 'Shot Put', nameSw: 'Kurusha Tufe', type: 'individual', min: 1 },
+            { id: 'sprint100', nameEn: '100m Sprint', nameSw: 'Mbio za Kasi 100m', type: 'individual', min: 1 },
+            { id: 'sprint200', nameEn: '200m Sprint', nameSw: 'Mbio za Kasi 200m', type: 'individual', min: 1 },
+            { id: 'sprint400', nameEn: '400m Sprint', nameSw: 'Mbio za Kasi 400m', type: 'individual', min: 1 },
+            { id: 'mid3000', nameEn: '3000m Middle Distance', nameSw: 'Mbio za Masaafa ya Kati 3000m', type: 'individual', min: 1 },
+            { id: 'solosinging', nameEn: 'Solo Singing', nameSw: 'Uimbaji wa Mtu Mmoja', type: 'individual', min: 1 }
+        ];
+
+        const TRANSLATIONS = {
+            en: {
+                mainTitle: 'Olimpiki za Kwanza za Amani',
+                subtitle: 'Athlete Registration — First Peace Olympic Games',
+                formTitle: 'Athlete Registration Form',
+                lblFirstName: 'First Name *',
+                lblLastName: 'Last Name *',
+                lblEmail: 'Email *',
+                lblVillage: 'Village / Country *',
+                lblAge: 'Age *',
+                lblGender: 'Gender *',
+                optMale: 'Male',
+                optFemale: 'Female',
+                lblSports: 'Select Sports (maximum 2) *',
+                sportNote: 'Each athlete may register for a maximum of 2 disciplines.',
+                btnRegister: 'Register Athlete',
+                btnReset: 'Cancel',
+                listTitle: 'Registered Athletes',
+                statTotal: 'Total',
+                statTeam: 'Teams',
+                statIndividual: 'Individuals',
+                btnExcel: 'Export Excel',
+                btnClear: 'Clear All',
+                thName: 'Name',
+                thVillage: 'Village',
+                thSport1: 'Sport 1',
+                thSport2: 'Sport 2',
+                thDate: 'Date',
+                thAction: 'Action',
+                noData: 'No athletes registered',
+                footerTitle: 'Olimpiki za Kwanza za Amani',
+                footerMotto: '"Peace is built with one heart, one effort, and one dream."',
+                teamLabel: 'TEAM',
+                individualLabel: 'INDIVIDUAL',
+                minPlayers: 'min. players',
+                teamName: 'Team Name',
+                teamNamePlaceholder: 'Enter your team name',
+                addMember: '+ Add Member',
+                membersList: 'Team members (including you as Captain)',
+                validationSelectSport: 'Please select at least one sport.',
+                validationMaxSports: 'You can select a maximum of 2 sports.',
+                validationTeamMin: (sport, min) => `The discipline "${sport}" requires at least ${min} members (including you).`,
+                validationEmail: 'Please enter a valid email address.',
+                successRegister: 'Athlete registered successfully!',
+                confirmClear: 'Are you sure you want to delete all data?',
+                btnRemove: 'Remove',
+                typeTeam: 'Team',
+                typeIndividual: 'Individual',
+                captainLabel: 'YOU (Captain)',
+                errorLoad: 'Error loading data. Check your Bin ID and API Key.',
+                errorSave: 'Error saving data. Please try again.',
+                statusOnline: 'Online',
+                statusOffline: 'Offline',
+                organizerAccess: 'Organizer Access',
+                organizerDesc: 'Enter the organizer password to view registrations, statistics, and the Sport Register.',
+                password: 'Password',
+                passwordPlaceholder: 'Enter password',
+                accessDashboard: 'Access Dashboard',
+                lockDashboard: 'Lock Dashboard',
+                incorrectPassword: 'Incorrect password.'
+            },
+            sw: {
+                mainTitle: 'Olimpiki za Kwanza za Amani',
+                subtitle: 'Usajili wa Wanamichezo — Michezo ya Kwanza ya Amani',
+                formTitle: 'Fomu ya Usajili wa Mwanamichezo',
+                lblFirstName: 'Jina la Kwanza *',
+                lblLastName: 'Jina la Familia *',
+                lblEmail: 'Barua Pepe *',
+                lblVillage: 'Kijiji / Nchi *',
+                lblAge: 'Umri *',
+                lblGender: 'Jinsia *',
+                optMale: 'Me',
+                optFemale: 'Ke',
+                lblSports: 'Chagua Michezo (kwa idadi ya 2) *',
+                sportNote: 'Kila mwanamichezo anaweza kujiandikisha kwa michezo 2 pekee.',
+                btnRegister: 'Sajili Mwanamichezo',
+                btnReset: 'Ghairi',
+                listTitle: 'Wanamichezo Waliosajiliwa',
+                statTotal: 'Jumla',
+                statTeam: 'Timu',
+                statIndividual: 'Watu Binafsi',
+                btnExcel: 'Pakua Excel',
+                btnClear: 'Futa Zote',
+                thName: 'Jina',
+                thVillage: 'Kijiji',
+                thSport1: 'Mchezo 1',
+                thSport2: 'Mchezo 2',
+                thDate: 'Tarehe',
+                thAction: 'Kitendo',
+                noData: 'Hakuna mwanamichezo aliyesajiliwa',
+                footerTitle: 'Olimpiki za Kwanza za Amani',
+                footerMotto: '"Amani hujengwa kwa moyo mmoja, juhudi moja na ndoto moja."',
+                teamLabel: 'TIMU',
+                individualLabel: 'MTU BINAFsi',
+                minPlayers: 'kadiri ya wachezaji',
+                teamName: 'Jina la Timu',
+                teamNamePlaceholder: 'Weka jina la timu yako',
+                addMember: '+ Ongeza Mwanachama',
+                membersList: 'Wanachama wa timu (wewe kama Kiongozi ukiwemo)',
+                validationSelectSport: 'Tafadhali chagua angalau mchezo mmoja.',
+                validationMaxSports: 'Unaweza kuchagua michezo 2 pekee.',
+                validationTeamMin: (sport, min) => `Mchezo wa "${sport}" unahitaji wachezaji ${min} (wewe ukiwemo).`,
+                validationEmail: 'Tafadhali weka anwani sahihi ya barua pepe.',
+                successRegister: 'Mwanamichezo amesajiliwa kwa mafanikio!',
+                confirmClear: 'Una uhakika unataka kufuta data zote?',
+                btnRemove: 'Ondoa',
+                typeTeam: 'Timu',
+                typeIndividual: 'Mtu Binafsi',
+                captainLabel: 'WEWE (Kiongozi)',
+                errorLoad: 'Hitilafu kupakia data. Angalia Bin ID na API Key.',
+                errorSave: 'Hitilafu kuhifadhi data. Tafadhali jaribu tena.',
+                statusOnline: 'Mtandao',
+                statusOffline: 'Hakuna Mtandao',
+                organizerAccess: 'Ufikiaji wa Mwandaaji',
+                organizerDesc: 'Weka neno la siri la mwandaaji kuona usajili, takwimu, na Rejesta ya Michezo.',
+                password: 'Neno la Siri',
+                passwordPlaceholder: 'Weka neno la siri',
+                accessDashboard: 'Fungua Dashibodi',
+                lockDashboard: 'Funga Dashibodi',
+                incorrectPassword: 'Neno la siri sio sahihi.'
+            }
+        };
+
+        let currentLang = 'en';
+        let selectedSports = [];
+        let athletes = [];
+
+        // ==================== ONLINE / OFFLINE STATUS ====================
+        function updateOnlineStatus() {
+            const badge = document.getElementById('statusBadge');
+            const text = document.getElementById('statusText');
+            const isOnline = navigator.onLine;
+
+            if (isOnline) {
+                badge.className = 'status-badge status-online';
+                text.textContent = t('statusOnline');
+            } else {
+                badge.className = 'status-badge status-offline';
+                text.textContent = t('statusOffline');
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+
+        // ==================== ORGANIZER AUTH ====================
+        function isOrganizerLoggedIn() {
+            return sessionStorage.getItem('olimpicOrganizer') === 'true';
+        }
+
+        function organizerLogin() {
+            const input = document.getElementById('orgPassword').value.trim();
+            const errorMsg = document.getElementById('loginError');
+
+            if (input === ORGANIZER_PASSWORD) {
+                sessionStorage.setItem('olimpicOrganizer', 'true');
+                errorMsg.style.display = 'none';
+                showOrganizerDashboard();
+                loadData(); // refresh data when entering dashboard
+            } else {
+                errorMsg.style.display = 'block';
+                document.getElementById('orgPassword').value = '';
+                document.getElementById('orgPassword').focus();
+            }
+        }
+
+        function organizerLogout() {
+            sessionStorage.removeItem('olimpicOrganizer');
+            hideOrganizerDashboard();
+        }
+
+        function showOrganizerDashboard() {
+            document.getElementById('organizerLoginCard').style.display = 'none';
+            document.getElementById('organizerDashboard').style.display = 'block';
+            document.getElementById('orgPassword').value = '';
+        }
+
+        function hideOrganizerDashboard() {
+            document.getElementById('organizerLoginCard').style.display = 'block';
+            document.getElementById('organizerDashboard').style.display = 'none';
+        }
+
+        function checkOrganizerSession() {
+            if (isOrganizerLoggedIn()) {
+                showOrganizerDashboard();
+            } else {
+                hideOrganizerDashboard();
+            }
+        }
+
+        // ==================== JSONBIN API ====================
+        function setLoading(show) {
+            document.getElementById('loadingOverlay').classList.toggle('active', show);
+            document.getElementById('btnSubmit').disabled = show;
+        }
+
+        async function loadData() {
+            if (!isOrganizerLoggedIn()) return;
+            setLoading(true);
+            try {
+                const res = await fetch(BIN_URL, {
+                    headers: { 'X-Master-Key': API_KEY }
+                });
+                if (!res.ok) throw new Error('Load failed');
+                const data = await res.json();
+                athletes = data.record.athletes || [];
+            } catch (err) {
+                console.error(err);
+                showAlert(t('errorLoad'), 'error');
+                athletes = [];
+            }
+            renderAthletesTable();
+            updateStats();
+            renderSportRegister();
+            setLoading(false);
+        }
+
+        async function saveData() {
+            setLoading(true);
+            try {
+                const res = await fetch(BIN_URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': API_KEY
+                    },
+                    body: JSON.stringify({ athletes })
+                });
+                if (!res.ok) throw new Error('Save failed');
+            } catch (err) {
+                console.error(err);
+                showAlert(t('errorSave'), 'error');
+            }
+            setLoading(false);
+        }
+
+        // ==================== INIT ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSportsGrid();
+            updateOnlineStatus();
+            checkOrganizerSession();
+            if (isOrganizerLoggedIn()) {
+                loadData();
+            }
+        });
+
+        // ==================== LANGUAGE ====================
+        function setLang(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang === 'sw' ? 'sw' : 'en';
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-sw').classList.toggle('active', lang === 'sw');
+
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                const val = TRANSLATIONS[lang][key];
+                if (val) {
+                    if (typeof val === 'function') return;
+                    el.textContent = val;
+                }
+            });
+
+            renderSportsGrid();
+            renderSportDetails();
+            if (isOrganizerLoggedIn()) {
+                renderAthletesTable();
+                renderSportRegister();
+            }
+            updateOnlineStatus();
+        }
+
+        function t(key, ...args) {
+            const val = TRANSLATIONS[currentLang][key];
+            return typeof val === 'function' ? val(...args) : val;
+        }
+
+        // ==================== SPORTS GRID ====================
+        function renderSportsGrid() {
+            const grid = document.getElementById('sportsGrid');
+            grid.innerHTML = '';
+
+            SPORTS.forEach(sport => {
+                const card = document.createElement('div');
+                card.className = 'sport-card' + (selectedSports.includes(sport.id) ? ' selected' : '');
+                if (selectedSports.length >= 2 && !selectedSports.includes(sport.id)) {
+                    card.classList.add('disabled');
+                }
+                card.dataset.id = sport.id;
+                card.onclick = () => toggleSport(sport.id);
+
+                const name = currentLang === 'sw' ? sport.nameSw : sport.nameEn;
+                const typeLabel = sport.type === 'team' ? t('teamLabel') : t('individualLabel');
+                const minInfo = sport.type === 'team' 
+                    ? `<div style="font-size:0.8rem;color:var(--accent);margin-top:4px;">min. ${sport.min} ${currentLang==='sw'?'wachezaji':'players'}</div>` 
+                    : '';
+
+                card.innerHTML = `
+                    <input type="checkbox" class="sport-checkbox" ${selectedSports.includes(sport.id) ? 'checked' : ''} onclick="event.stopPropagation()">
+                    <div style="font-weight:700;color:var(--brown-dark);">${name}</div>
+                    <div class="sport-type">${typeLabel}</div>
+                    ${minInfo}
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleSport(sportId) {
+            if (selectedSports.includes(sportId)) {
+                selectedSports = selectedSports.filter(id => id !== sportId);
+            } else {
+                if (selectedSports.length >= 2) {
+                    showAlert(t('validationMaxSports'), 'error');
+                    return;
+                }
+                selectedSports.push(sportId);
+            }
+            renderSportsGrid();
+            renderSportDetails();
+        }
+
+        // ==================== SPORT DETAILS ====================
+        function renderSportDetails() {
+            const container = document.getElementById('sportDetailsContainer');
+            container.innerHTML = '';
+
+            selectedSports.forEach(sportId => {
+                const sport = SPORTS.find(s => s.id === sportId);
+                if (!sport) return;
+
+                const div = document.createElement('div');
+                div.className = 'sport-details active';
+                div.dataset.sportId = sportId;
+
+                const name = currentLang === 'sw' ? sport.nameSw : sport.nameEn;
+
+                if (sport.type === 'team') {
+                    div.innerHTML = `
+                        <h3 style="font-family:Cinzel;color:var(--brown);margin-bottom:1rem;">${name}</h3>
+                        <div class="team-name-box">
+                            <label>${t('teamName')} *</label>
+                            <input type="text" class="team-name-input" data-sport="${sportId}" required 
+                                placeholder="${t('teamNamePlaceholder')}">
+                        </div>
+                        <div class="team-members">
+                            <label>${t('membersList')} — <span style="color:var(--accent);">min ${sport.min}</span></label>
+                            <div class="members-list" data-sport="${sportId}">
+                                <div class="member-row" style="background:rgba(201,162,39,0.1);padding:0.5rem;border-radius:4px;">
+                                    <input type="text" value="${t('captainLabel')}" disabled style="grid-column:1/3;">
+                                    <span style="font-size:0.8rem;color:var(--brown);">CAPTAIN</span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-secondary btn-small" onclick="addMemberRow('${sportId}')" style="margin-top:0.5rem;">
+                                ${t('addMember')}
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    div.innerHTML = `
+                        <h3 style="font-family:Cinzel;color:var(--brown);">${name}</h3>
+                        <p style="color:#666;font-size:0.9rem;margin-top:0.5rem;">${currentLang==='sw'?'Ushiriki wa mtu binafsi umethibitishwa.':'Individual participation confirmed.'}</p>
+                    `;
+                }
+
+                container.appendChild(div);
+            });
+        }
+
+        function addMemberRow(sportId) {
+            const list = document.querySelector(`.members-list[data-sport="${sportId}"]`);
+            const row = document.createElement('div');
+            row.className = 'member-row';
+            row.innerHTML = `
+                <input type="text" placeholder="${currentLang==='sw'?'Jina la mwanachama':'Member name'}" class="member-name" required>
+                <input type="number" placeholder="${currentLang==='sw'?'Umri':'Age'}" class="member-age" min="12" max="25" required>
+                <button type="button" class="btn btn-danger btn-small" onclick="this.parentElement.remove()">×</button>
+            `;
+            list.appendChild(row);
+        }
+
+        // ==================== FORM SUBMIT ====================
+        document.getElementById('athleteForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (selectedSports.length === 0) {
+                showAlert(t('validationSelectSport'), 'error');
+                return;
+            }
+
+            const email = document.getElementById('email').value.trim();
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showAlert(t('validationEmail'), 'error');
+                return;
+            }
+
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const village = document.getElementById('village').value.trim();
+            const age = parseInt(document.getElementById('age').value);
+            const gender = document.getElementById('gender').value;
+
+            const sportsData = [];
+
+            for (const sportId of selectedSports) {
+                const sport = SPORTS.find(s => s.id === sportId);
+                if (sport.type === 'team') {
+                    const teamNameInput = document.querySelector(`.team-name-input[data-sport="${sportId}"]`);
+                    const teamName = teamNameInput ? teamNameInput.value.trim() : '';
+                    if (!teamName) {
+                        showAlert(`${currentLang==='sw'?'Weka jina la timu kwa':'Enter the team name for'} ${currentLang==='sw'?sport.nameSw:sport.nameEn}`, 'error');
+                        return;
+                    }
+
+                    const memberRows = document.querySelectorAll(`.members-list[data-sport="${sportId}"] .member-row:not([style*="background"])`);
+                    const members = [{ name: firstName + ' ' + lastName + ' (C)', age, gender, role: 'Captain' }];
+                    memberRows.forEach(row => {
+                        const mName = row.querySelector('.member-name').value.trim();
+                        const mAge = row.querySelector('.member-age').value;
+                        if (mName) {
+                            members.push({ name: mName, age: parseInt(mAge) || age, gender: '-', role: 'Player' });
+                        }
+                    });
+
+                    if (members.length < sport.min) {
+                        showAlert(t('validationTeamMin', currentLang==='sw'?sport.nameSw:sport.nameEn, sport.min), 'error');
+                        return;
+                    }
+
+                    sportsData.push({
+                        id: sportId,
+                        name: currentLang==='sw'?sport.nameSw:sport.nameEn,
+                        type: 'team',
+                        teamName: teamName,
+                        members: members
+                    });
+                } else {
+                    sportsData.push({
+                        id: sportId,
+                        name: currentLang==='sw'?sport.nameSw:sport.nameEn,
+                        type: 'individual'
+                    });
+                }
+            }
+
+            const athlete = {
+                id: Date.now(),
+                firstName,
+                lastName,
+                email,
+                village,
+                age,
+                gender,
+                sports: sportsData,
+                registeredAt: new Date().toLocaleString()
+            };
+
+            athletes.push(athlete);
+            await saveData();
+
+            showAlert(t('successRegister'), 'success');
+            resetForm();
+            if (isOrganizerLoggedIn()) {
+                renderAthletesTable();
+                updateStats();
+                renderSportRegister();
+            }
+        });
+
+        function resetForm() {
+            document.getElementById('athleteForm').reset();
+            selectedSports = [];
+            renderSportsGrid();
+            renderSportDetails();
+        }
+
+        // ==================== ALERTS ====================
+        function showAlert(msg, type) {
+            const box = document.getElementById('alertBox');
+            box.textContent = msg;
+            box.className = 'alert alert-' + type + ' show';
+            setTimeout(() => box.classList.remove('show'), 4000);
+        }
+
+        // ==================== TABLE ====================
+        function renderAthletesTable() {
+            const tbody = document.getElementById('athletesBody');
+            if (athletes.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#888;">${t('noData')}</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = athletes.map(a => {
+                const s1 = a.sports[0];
+                const s2 = a.sports[1];
+                const badge1 = s1 ? `<span class="badge badge-${s1.type}">${s1.type==='team'?t('typeTeam'):t('typeIndividual')}</span> ${s1.name}${s1.type==='team'?` <small style="color:var(--accent)">[${s1.teamName}]</small>`:''}` : '—';
+                const badge2 = s2 ? `<span class="badge badge-${s2.type}">${s2.type==='team'?t('typeTeam'):t('typeIndividual')}</span> ${s2.name}${s2.type==='team'?` <small style="color:var(--accent)">[${s2.teamName}]</small>`:''}` : '—';
+
+                return `
+                    <tr>
+                        <td><strong>${a.firstName} ${a.lastName}</strong><br><small style="color:#888;">${a.gender==='M'?'♂':'♀'} ${a.age} yrs — ${a.email}</small></td>
+                        <td>${a.village}</td>
+                        <td>${badge1}</td>
+                        <td>${badge2}</td>
+                        <td>${a.registeredAt}</td>
+                        <td><button class="btn btn-danger btn-small" onclick="deleteAthlete(${a.id})">${t('btnRemove')}</button></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function deleteAthlete(id) {
+            athletes = athletes.filter(a => a.id !== id);
+            await saveData();
+            renderAthletesTable();
+            updateStats();
+            renderSportRegister();
+        }
+
+        async function clearAll() {
+            if (!confirm(t('confirmClear'))) return;
+            athletes = [];
+            await saveData();
+            renderAthletesTable();
+            updateStats();
+            renderSportRegister();
+        }
+
+        function updateStats() {
+            document.getElementById('statTotal').textContent = athletes.length;
+            const teamCount = athletes.filter(a => a.sports.some(s => s.type === 'team')).length;
+            const indCount = athletes.filter(a => a.sports.every(s => s.type === 'individual')).length;
+            document.getElementById('statTeam').textContent = teamCount;
+            document.getElementById('statIndividual').textContent = indCount;
+        }
+
+        // ==================== SPORT REGISTER ====================
+        function renderSportRegister() {
+            const container = document.getElementById('sportRegisterContainer');
+            container.innerHTML = '';
+
+            SPORTS.forEach(sport => {
+                const sportName = currentLang === 'sw' ? sport.nameSw : sport.nameEn;
+                const card = document.createElement('div');
+                card.className = 'register-card';
+
+                // Gather data for this sport
+                const teams = [];
+                const individuals = [];
+
+                athletes.forEach(athlete => {
+                    athlete.sports.forEach(s => {
+                        if (s.id === sport.id) {
+                            if (s.type === 'team' && s.members) {
+                                teams.push({
+                                    teamName: s.teamName,
+                                    members: s.members,
+                                    village: athlete.village,
+                                    captainEmail: athlete.email
+                                });
+                            } else if (s.type === 'individual') {
+                                individuals.push({
+                                    name: `${athlete.firstName} ${athlete.lastName}`,
+                                    village: athlete.village,
+                                    age: athlete.age,
+                                    gender: athlete.gender,
+                                    email: athlete.email
+                                });
+                            }
+                        }
+                    });
+                });
+
+                const totalCount = teams.reduce((sum, t) => sum + t.members.length, 0) + individuals.length;
+
+                let bodyHtml = '';
+
+                if (sport.type === 'team') {
+                    if (teams.length === 0) {
+                        bodyHtml = `<div class="register-empty">${currentLang==='sw'?'Hakuna timu zilizosajiliwa.':'No teams registered.'}</div>`;
+                    } else {
+                        teams.forEach(team => {
+                            const membersHtml = team.members.map(m => {
+                                const roleBadge = m.role === 'Captain' 
+                                    ? `<span class="role" style="color:var(--gold);font-weight:700;">[${m.role}]</span>` 
+                                    : `<span class="role">[${m.role}]</span>`;
+                                return `<div class="register-member">${m.name} ${roleBadge}</div>`;
+                            }).join('');
+                            bodyHtml += `
+                                <div class="register-team-block">
+                                    <div class="register-team-name">${team.teamName}</div>
+                                    <div style="font-size:0.8rem;color:var(--brown);margin-bottom:0.4rem;padding-left:1.5rem;">
+                                        ${team.village} &bull; Captain: ${team.captainEmail}
+                                    </div>
+                                    ${membersHtml}
+                                </div>
+                            `;
+                        });
+                    }
+                } else {
+                    if (individuals.length === 0) {
+                        bodyHtml = `<div class="register-empty">${currentLang==='sw'?'Hakuna washiriki waliosajiliwa.':'No participants registered.'}</div>`;
+                    } else {
+                        bodyHtml = individuals.map(ind => `
+                            <div class="register-individual">
+                                <span><strong>${ind.name}</strong> <span class="info">(${ind.village}, ${ind.age} yrs, ${ind.gender==='M'?'♂':'♀'})</span></span>
+                            </div>
+                        `).join('');
+                    }
+                }
+
+                card.innerHTML = `
+                    <div class="register-header">
+                        <span>${sportName}</span>
+                        <span class="count">${totalCount}</span>
+                    </div>
+                    <div class="register-body">
+                        ${bodyHtml}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // ==================== EXCEL EXPORT ====================
+        function exportToExcel() {
+            if (athletes.length === 0) {
+                showAlert(currentLang==='sw'?'Hakuna data ya kupakua.':'No data to export.', 'error');
+                return;
+            }
+
+            const wb = XLSX.utils.book_new();
+
+            // --- Sheet 1: Summary (all registrants) ---
+            const summaryRows = athletes.map(a => {
+                const s1 = a.sports[0] || {};
+                const s2 = a.sports[1] || {};
+                return {
+                    'ID': a.id,
+                    'First Name': a.firstName,
+                    'Last Name': a.lastName,
+                    'Email': a.email,
+                    'Village / Country': a.village,
+                    'Age': a.age,
+                    'Gender': a.gender,
+                    'Sport 1': s1.name || '',
+                    'Type 1': s1.type || '',
+                    'Team 1': s1.teamName || '',
+                    'Sport 2': s2.name || '',
+                    'Type 2': s2.type || '',
+                    'Team 2': s2.teamName || '',
+                    'Registered At': a.registeredAt
+                };
+            });
+            const wsSummary = XLSX.utils.json_to_sheet(summaryRows);
+            wsSummary['!cols'] = [
+                {wch:12},{wch:15},{wch:15},{wch:28},{wch:22},{wch:6},{wch:8},
+                {wch:24},{wch:10},{wch:20},
+                {wch:24},{wch:10},{wch:20},
+                {wch:20}
+            ];
+            XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary');
+
+            // --- Sheet 2: Team Roster (expanded members) ---
+            const teamRoster = [];
+            athletes.forEach(a => {
+                a.sports.forEach(s => {
+                    if (s.type === 'team' && s.members) {
+                        s.members.forEach(m => {
+                            teamRoster.push({
+                                'Sport': s.name,
+                                'Team Name': s.teamName,
+                                'Member Name': m.name,
+                                'Age': m.age,
+                                'Gender': m.gender,
+                                'Village / Country': a.village,
+                                'Role': m.role,
+                                'Captain Email': m.role === 'Captain' ? a.email : '',
+                                'Registered At': a.registeredAt
+                            });
+                        });
+                    }
+                });
+            });
+
+            if (teamRoster.length > 0) {
+                teamRoster.sort((a, b) => {
+                    if (a.Sport !== b.Sport) return a.Sport.localeCompare(b.Sport);
+                    return a['Team Name'].localeCompare(b['Team Name']);
+                });
+                const wsTeams = XLSX.utils.json_to_sheet(teamRoster);
+                wsTeams['!cols'] = [
+                    {wch:24},{wch:22},{wch:22},{wch:6},{wch:8},{wch:22},{wch:12},{wch:28},{wch:20}
+                ];
+                XLSX.utils.book_append_sheet(wb, wsTeams, 'Team Roster');
+            }
+
+            // --- Sheet 3: Individual Athletes ---
+            const individualRows = [];
+            athletes.forEach(a => {
+                a.sports.forEach(s => {
+                    if (s.type === 'individual') {
+                        individualRows.push({
+                            'First Name': a.firstName,
+                            'Last Name': a.lastName,
+                            'Email': a.email,
+                            'Village / Country': a.village,
+                            'Age': a.age,
+                            'Gender': a.gender,
+                            'Sport': s.name,
+                            'Registered At': a.registeredAt
+                        });
+                    }
+                });
+            });
+
+            if (individualRows.length > 0) {
+                individualRows.sort((a, b) => a.Sport.localeCompare(b.Sport));
+                const wsInd = XLSX.utils.json_to_sheet(individualRows);
+                wsInd['!cols'] = [
+                    {wch:15},{wch:15},{wch:28},{wch:22},{wch:6},{wch:8},{wch:24},{wch:20}
+                ];
+                XLSX.utils.book_append_sheet(wb, wsInd, 'Individual Athletes');
+            }
+
+            // --- Sheets per sport di squadra (separate by sport & team) ---
+            const teamSports = [...new Set(athletes.flatMap(a => a.sports.filter(s => s.type === 'team').map(s => s.id)))];
+            teamSports.forEach(sportId => {
+                const sport = SPORTS.find(s => s.id === sportId);
+                const sportName = sport ? (currentLang==='sw'?sport.nameSw:sport.nameEn) : sportId;
+                const sheetName = sportName.replace(/[^a-zA-Z0-9 ]/g, '').substring(0, 28) || 'Team';
+
+                const sportTeams = [];
+                athletes.forEach(a => {
+                    a.sports.forEach(s => {
+                        if (s.id === sportId && s.type === 'team') {
+                            s.members.forEach(m => {
+                                sportTeams.push({
+                                    'Team Name': s.teamName,
+                                    'Member Name': m.name,
+                                    'Age': m.age,
+                                    'Gender': m.gender,
+                                    'Village / Country': a.village,
+                                    'Role': m.role,
+                                    'Captain Email': m.role === 'Captain' ? a.email : '',
+                                    'Registered At': a.registeredAt
+                                });
+                            });
+                        }
+                    });
+                });
+
+                if (sportTeams.length > 0) {
+                    sportTeams.sort((a, b) => a['Team Name'].localeCompare(b['Team Name']));
+                    const wsSport = XLSX.utils.json_to_sheet(sportTeams);
+                    wsSport['!cols'] = [
+                        {wch:22},{wch:22},{wch:6},{wch:8},{wch:22},{wch:12},{wch:28},{wch:20}
+                    ];
+                    XLSX.utils.book_append_sheet(wb, wsSport, sheetName);
+                }
+            });
+
+            const filename = currentLang === 'sw' 
+                ? 'Usajili_Wanamichezo_Olimpiki.xlsx' 
+                : 'Athlete_Registration_Olimpiki.xlsx';
+            XLSX.writeFile(wb, filename);
+        }
+    </script>
+</body>
+</html>
