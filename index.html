@@ -1048,16 +1048,20 @@
             document.getElementById('btnSubmit').disabled = show;
         }
 
+        async function fetchAthletes() {
+            const res = await fetch(BIN_URL, {
+                headers: { 'X-Master-Key': API_KEY }
+            });
+            if (!res.ok) throw new Error('Load failed');
+            const data = await res.json();
+            return data.record.athletes || [];
+        }
+
         async function loadData() {
             if (!isOrganizerLoggedIn()) return;
             setLoading(true);
             try {
-                const res = await fetch(BIN_URL, {
-                    headers: { 'X-Master-Key': API_KEY }
-                });
-                if (!res.ok) throw new Error('Load failed');
-                const data = await res.json();
-                athletes = data.record.athletes || [];
+                athletes = await fetchAthletes();
             } catch (err) {
                 console.error(err);
                 showAlert(t('errorLoad'), 'error');
@@ -1307,6 +1311,13 @@
                 registeredAt: new Date().toLocaleString()
             };
 
+            // Fetch current data from JSONBin before saving to avoid overwriting other registrations
+            setLoading(true);
+            try {
+                athletes = await fetchAthletes();
+            } catch (err) {
+                console.error('Could not pre-fetch athletes, proceeding with local array:', err);
+            }
             athletes.push(athlete);
             await saveData();
 
