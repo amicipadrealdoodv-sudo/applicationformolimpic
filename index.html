@@ -1,1634 +1,783 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Olimpiki za Kwanza za Amani — Athlete Registration</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <style>
-        :root {
-            --cream: #f5f0e6;
-            --beige: #e8dcc8;
-            --brown-dark: #3d2817;
-            --brown: #5c3d2e;
-            --gold: #c9a227;
-            --gold-light: #e6c86e;
-            --black: #1a1a1a;
-            --accent: #8b4513;
-            --success: #2d6a4f;
-            --error: #9b2226;
-            --online: #2d6a4f;
-            --offline: #9b2226;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Lato', sans-serif;
-            background: var(--cream);
-            color: var(--brown-dark);
-            line-height: 1.6;
-        }
-
-        .border-pattern {
-            height: 12px;
-            background: repeating-linear-gradient(
-                45deg,
-                var(--brown-dark),
-                var(--brown-dark) 10px,
-                var(--gold) 10px,
-                var(--gold) 20px,
-                var(--cream) 20px,
-                var(--cream) 30px,
-                var(--brown) 30px,
-                var(--brown) 40px
-            );
-        }
-
-        header {
-            background: linear-gradient(135deg, var(--brown-dark) 0%, var(--brown) 100%);
-            color: var(--cream);
-            padding: 2rem 1rem;
-            text-align: center;
-            position: relative;
-            border-bottom: 4px solid var(--gold);
-        }
-
-        .olympic-rings {
-            font-size: 2.5rem;
-            letter-spacing: 4px;
-            margin-bottom: 0.5rem;
-        }
-
-        h1 {
-            font-family: 'Cinzel', serif;
-            font-size: 2rem;
-            color: var(--gold-light);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-        }
-
-        .subtitle {
-            font-style: italic;
-            opacity: 0.9;
-            margin-top: 0.5rem;
-            font-size: 1.1rem;
-        }
-
-        .event-info {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-            font-size: 0.95rem;
-        }
-
-        .event-info span {
-            background: rgba(201, 162, 39, 0.2);
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
-            border: 1px solid var(--gold);
-        }
-
-        .lang-toggle {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .lang-toggle button {
-            background: transparent;
-            border: 1px solid var(--gold);
-            color: var(--gold);
-            padding: 0.3rem 0.8rem;
-            cursor: pointer;
-            font-family: 'Cinzel', serif;
-            font-size: 0.8rem;
-            transition: all 0.3s;
-        }
-
-        .lang-toggle button:hover, .lang-toggle button.active {
-            background: var(--gold);
-            color: var(--brown-dark);
-        }
-
-        .status-badge {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            background: rgba(255,255,255,0.15);
-            padding: 0.35rem 0.9rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        .status-online { color: #90ee90; }
-        .status-online .status-dot { background: #90ee90; }
-
-        .status-offline { color: #ff9999; }
-        .status-offline .status-dot { background: #ff9999; animation: none; }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-
-        main {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
-
-        .card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(61, 40, 23, 0.15);
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border-top: 4px solid var(--gold);
-        }
-
-        h2 {
-            font-family: 'Cinzel', serif;
-            color: var(--brown-dark);
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
-            border-bottom: 2px solid var(--beige);
-            padding-bottom: 0.5rem;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.2rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            font-weight: 700;
-            margin-bottom: 0.4rem;
-            color: var(--brown);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        input, select {
-            padding: 0.7rem;
-            border: 2px solid var(--beige);
-            border-radius: 4px;
-            font-family: 'Lato', sans-serif;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-            background: var(--cream);
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: var(--gold);
-        }
-
-        .sports-section {
-            margin-top: 1.5rem;
-        }
-
-        .sports-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .sport-card {
-            border: 2px solid var(--beige);
-            border-radius: 6px;
-            padding: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            background: white;
-        }
-
-        .sport-card:hover {
-            border-color: var(--gold);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .sport-card.selected {
-            border-color: var(--gold);
-            background: rgba(201, 162, 39, 0.08);
-            box-shadow: 0 0 0 2px var(--gold);
-        }
-
-        .sport-card.disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        .sport-card .sport-type {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--accent);
-            font-weight: 700;
-            margin-top: 0.3rem;
-        }
-
-        .sport-checkbox {
-            position: absolute;
-            top: 0.8rem;
-            right: 0.8rem;
-            width: 20px;
-            height: 20px;
-            accent-color: var(--gold);
-        }
-
-        .sport-details {
-            margin-top: 1rem;
-            padding: 1.2rem;
-            background: var(--cream);
-            border-radius: 6px;
-            border-left: 4px solid var(--gold);
-            display: none;
-        }
-
-        .sport-details.active {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .team-members {
-            margin-top: 1rem;
-        }
-
-        .member-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 80px;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-            align-items: center;
-        }
-
-        .member-row input {
-            padding: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .btn {
-            padding: 0.7rem 1.5rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: 'Cinzel', serif;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: var(--brown-dark);
-            color: var(--gold-light);
-        }
-
-        .btn-primary:hover {
-            background: var(--brown);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(61, 40, 23, 0.3);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-secondary {
-            background: var(--gold);
-            color: var(--brown-dark);
-        }
-
-        .btn-secondary:hover {
-            background: var(--gold-light);
-        }
-
-        .btn-danger {
-            background: var(--error);
-            color: white;
-            padding: 0.4rem 0.8rem;
-            font-size: 0.8rem;
-        }
-
-        .btn-small {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.8rem;
-        }
-
-        .actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .alert {
-            padding: 1rem;
-            border-radius: 4px;
-            margin-bottom: 1rem;
-            display: none;
-        }
-
-        .alert.show { display: block; }
-        .alert-success { background: #d4edda; color: var(--success); border: 1px solid var(--success); }
-        .alert-error { background: #f8d7da; color: var(--error); border: 1px solid var(--error); }
-        .alert-info { background: #d1ecf1; color: #0c5460; border: 1px solid #0c5460; }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
-            font-size: 0.95rem;
-        }
-
-        th, td {
-            padding: 0.8rem;
-            text-align: left;
-            border-bottom: 1px solid var(--beige);
-        }
-
-        th {
-            background: var(--brown-dark);
-            color: var(--gold-light);
-            font-family: 'Cinzel', serif;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        tr:hover { background: rgba(201, 162, 39, 0.05); }
-
-        .badge {
-            display: inline-block;
-            padding: 0.2rem 0.6rem;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .badge-team { background: #e3f2fd; color: #1565c0; }
-        .badge-individual { background: #f3e5f5; color: #6a1b9a; }
-
-        .stats-bar {
-            display: flex;
-            gap: 2rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .stat-box {
-            background: var(--brown-dark);
-            color: var(--gold);
-            padding: 1rem 1.5rem;
-            border-radius: 6px;
-            text-align: center;
-            min-width: 120px;
-        }
-
-        .stat-number {
-            font-size: 1.8rem;
-            font-weight: 700;
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            opacity: 0.9;
-        }
-
-        .team-name-box {
-            background: white;
-            border: 2px dashed var(--gold);
-            padding: 1rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
-        }
-
-        .team-name-box label {
-            color: var(--brown-dark);
-            font-size: 1rem;
-        }
-
-        .team-name-box input {
-            width: 100%;
-            margin-top: 0.5rem;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--brown-dark);
-        }
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            background: var(--brown-dark);
-            color: var(--cream);
-            margin-top: 3rem;
-            font-family: 'Cinzel', serif;
-        }
-
-        .motto {
-            font-style: italic;
-            color: var(--gold);
-            margin-top: 0.5rem;
-        }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(61, 40, 23, 0.4);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-        }
-
-        .loading-overlay.active {
-            display: flex;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid var(--cream);
-            border-top-color: var(--gold);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* ===== SPORT REGISTER STYLES ===== */
-        .register-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-
-        .register-card {
-            background: var(--cream);
-            border: 2px solid var(--beige);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: all 0.3s;
-        }
-
-        .register-card:hover {
-            border-color: var(--gold);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
-
-        .register-header {
-            background: linear-gradient(135deg, var(--brown-dark), var(--brown));
-            color: var(--gold-light);
-            padding: 1rem;
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .register-header .count {
-            background: var(--gold);
-            color: var(--brown-dark);
-            padding: 0.2rem 0.7rem;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .register-body {
-            padding: 1rem;
-        }
-
-        .register-team-block {
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px dashed var(--beige);
-        }
-
-        .register-team-block:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-
-        .register-team-name {
-            font-weight: 700;
-            color: var(--accent);
-            font-size: 0.95rem;
-            margin-bottom: 0.4rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .register-team-name::before {
-            content: "⚜";
-            color: var(--gold);
-        }
-
-        .register-member {
-            font-size: 0.9rem;
-            color: var(--brown-dark);
-            padding: 0.15rem 0;
-            padding-left: 1.5rem;
-        }
-
-        .register-member .role {
-            font-size: 0.75rem;
-            color: var(--brown);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .register-individual {
-            font-size: 0.9rem;
-            color: var(--brown-dark);
-            padding: 0.3rem 0;
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px dotted var(--beige);
-        }
-
-        .register-individual:last-child {
-            border-bottom: none;
-        }
-
-        .register-individual .info {
-            color: var(--brown);
-            font-size: 0.8rem;
-        }
-
-        .register-empty {
-            color: #888;
-            font-style: italic;
-            font-size: 0.9rem;
-            text-align: center;
-            padding: 1rem;
-        }
-
-        /* ===== ORGANIZER LOGIN STYLES ===== */
-        .login-icon {
-            font-size: 3rem;
-            text-align: center;
-            margin-bottom: 1rem;
-            color: var(--gold);
-        }
-
-        .login-card {
-            max-width: 450px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .login-card .form-group {
-            text-align: left;
-        }
-
-        .login-card input[type="password"] {
-            font-size: 1.1rem;
-            letter-spacing: 2px;
-        }
-
-        .lock-bar {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 2rem;
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 1.4rem; }
-            .form-grid { grid-template-columns: 1fr; }
-            .member-row { grid-template-columns: 1fr; }
-            .event-info { gap: 0.5rem; }
-            .status-badge { position: static; margin-bottom: 1rem; justify-content: center; }
-            .lang-toggle { position: static; margin-bottom: 1rem; justify-content: center; }
-            header { padding-top: 1rem; }
-        }
-    </style>
-<base target="_blank">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OLIMPIKI 2026 — Official Tournament Program</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07070a; --surface:#0f0f14; --surface-2:#16161e; --surface-3:#1e1e28;
+  --border:rgba(255,255,255,0.06); --border-strong:rgba(255,255,255,0.12);
+  --text:#f0f0f5; --muted:#8a8a9a; --gold:#e5b80b; --green:#00d084;
+  --purple:#a855f7; --red:#ef4444; --blue:#3b82f6; --teal:#14b8a6;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); font-size:14px; min-height:100vh; line-height:1.5; -webkit-font-smoothing:antialiased; }
+.header { background: linear-gradient(180deg, rgba(229,184,11,0.08) 0%, var(--bg) 100%); border-bottom:1px solid var(--border); position:relative; overflow:hidden; }
+.header::before { content:''; position:absolute; top:-50%; left:-10%; width:120%; height:200%; background:radial-gradient(ellipse at 50% 0%, rgba(229,184,11,0.12) 0%, transparent 60%); pointer-events:none; }
+.header-top { display:flex; align-items:center; justify-content:space-between; padding:28px 32px; max-width:1400px; margin:0 auto; position:relative; z-index:1; }
+.logo-area { display:flex; align-items:center; gap:18px; }
+.logo-circle { width:72px; height:72px; border-radius:50%; background: linear-gradient(135deg, var(--gold), #b8941d); display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:700; color:#07070a; font-family:'Space Grotesk',sans-serif; box-shadow:0 0 40px rgba(229,184,11,0.25), inset 0 1px 0 rgba(255,255,255,0.3); border:2px solid rgba(255,255,255,0.1); }
+.title-block h1 { font-family:'Space Grotesk',sans-serif; font-size:2.4rem; font-weight:700; color:var(--text); letter-spacing:2px; line-height:1; text-shadow:0 2px 10px rgba(0,0,0,0.5); }
+.title-block p { color:var(--gold); font-size:.85rem; letter-spacing:4px; text-transform:uppercase; margin-top:6px; font-weight:600; opacity:0.9; }
+.header-dates { text-align:right; }
+.header-dates .day { font-family:'Space Grotesk',sans-serif; font-size:1.6rem; font-weight:700; color:var(--text); letter-spacing:1px; }
+.header-dates .loc { color:var(--muted); font-size:.75rem; letter-spacing:2px; text-transform:uppercase; margin-top:4px; }
+.sport-badges { display:flex; gap:10px; padding:0 32px 20px; max-width:1400px; margin:0 auto; flex-wrap:wrap; }
+.sport-badge { padding:6px 16px; border-radius:100px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:.8rem; letter-spacing:1px; background:var(--surface-2); border:1px solid var(--border); backdrop-filter:blur(10px); transition:all .3s ease; }
+.sport-badge:hover { transform:translateY(-2px); border-color:var(--border-strong); }
+.sport-badge:nth-child(1) { color:var(--green); border-color:rgba(0,208,132,0.3); background:rgba(0,208,132,0.08); }
+.sport-badge:nth-child(2) { color:var(--purple); border-color:rgba(168,85,247,0.3); background:rgba(168,85,247,0.08); }
+.sport-badge:nth-child(3) { color:var(--gold); border-color:rgba(229,184,11,0.3); background:rgba(229,184,11,0.08); }
+.sport-badge:nth-child(4) { color:var(--red); border-color:rgba(239,68,68,0.3); background:rgba(239,68,68,0.08); }
+.sport-badge:nth-child(5) { color:var(--teal); border-color:rgba(20,184,166,0.3); background:rgba(20,184,166,0.08); }
+nav { background:rgba(7,7,10,0.85); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); }
+.nav-inner { display:flex; max-width:1400px; margin:0 auto; overflow-x:auto; gap:4px; padding:0 24px; scrollbar-width:none; }
+.nav-inner::-webkit-scrollbar { display:none; }
+.nav-link { background:transparent; border:none; color:var(--muted); padding:16px 20px; cursor:pointer; white-space:nowrap; font-family:'Space Grotesk',sans-serif; font-size:.9rem; font-weight:600; letter-spacing:1px; border-bottom:2px solid transparent; transition:all .3s ease; text-decoration:none; display:inline-block; position:relative; }
+.nav-link:hover { color:var(--text); }
+.nav-link.active { color:var(--gold); border-bottom-color:var(--gold); }
+.section { display:none; animation:fadeIn .4s ease; }
+.section.active { display:block; }
+#schedule { display:block; }
+#football:target ~ #schedule, #volleyball:target ~ #schedule, #chess:target ~ #schedule, #athletics:target ~ #schedule, #music:target ~ #schedule { display:none; }
+#football:target, #volleyball:target, #chess:target, #athletics:target, #music:target { display:block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+.page { max-width:1400px; margin:0 auto; padding:32px; }
+.section-title { font-family:'Space Grotesk',sans-serif; font-size:1.6rem; font-weight:700; color:var(--text); margin-bottom:24px; letter-spacing:1px; display:flex; align-items:center; gap:12px; }
+.section-title::before { content:''; width:4px; height:28px; background:var(--gold); border-radius:2px; }
+.day-block { margin-bottom:48px; }
+.day-title { font-family:'Space Grotesk',sans-serif; font-size:1.1rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:24px; display:flex; align-items:center; gap:12px; padding:12px 16px; background:var(--surface); border:1px solid var(--border); border-radius:8px; }
+.day-fri { color:var(--gold); border-left:3px solid var(--gold); }
+.day-sat { color:var(--blue); border-left:3px solid var(--blue); }
+.day-sun { color:var(--green); border-left:3px solid var(--green); }
+.schedule-sport-header { display:flex; align-items:center; gap:10px; margin:28px 0 16px; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:.95rem; color:var(--text); letter-spacing:1px; }
+.sport-dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+.matches-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:12px; }
+.match-card { background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:16px; transition:all .3s ease; position:relative; overflow:hidden; }
+.match-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:2px; background:linear-gradient(90deg, transparent, var(--gold), transparent); opacity:0; transition:opacity .3s ease; }
+.match-card:hover { transform:translateY(-3px); border-color:var(--border-strong); box-shadow:0 12px 40px rgba(0,0,0,0.4); }
+.match-card:hover::before { opacity:1; }
+.match-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.match-time { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.85rem; color:var(--gold); background:rgba(229,184,11,0.1); padding:4px 10px; border-radius:6px; }
+.match-field { font-size:.75rem; color:var(--muted); font-weight:500; letter-spacing:1px; background:var(--surface-3); padding:4px 10px; border-radius:6px; }
+.match-teams { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:12px; }
+.match-team-home, .match-team-away { font-weight:600; font-size:.95rem; flex:1; }
+.match-team-home { text-align:right; }
+.match-team-away { text-align:left; }
+.match-vs { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1rem; color:var(--gold); padding:0 8px; flex-shrink:0; }
+.match-footer { display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:10px; margin-top:4px; }
+.match-type { font-size:.75rem; color:var(--muted); font-weight:600; letter-spacing:1px; }
+.groups-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:20px; margin-bottom:32px; }
+.group-card { background:var(--surface-2); border:1px solid var(--border); border-radius:16px; overflow:hidden; transition:all .3s ease; }
+.group-card:hover { transform:translateY(-4px); box-shadow:0 16px 48px rgba(0,0,0,0.4); border-color:var(--border-strong); }
+.group-header { display:flex; justify-content:space-between; align-items:center; padding:16px 20px; background:var(--surface-3); border-bottom:1px solid var(--border); }
+.group-label { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.9rem; color:#fff; background:var(--gold); padding:6px 14px; border-radius:6px; letter-spacing:1px; }
+.group-teams { padding:12px; }
+.group-team { display:flex; align-items:center; gap:12px; padding:10px 12px; border-bottom:1px solid var(--border); transition:background .2s ease; }
+.group-team:last-child { border-bottom:none; }
+.group-team:hover { background:var(--surface-3); border-radius:8px; }
+.team-num { width:28px; height:28px; border-radius:50%; background:var(--surface-3); display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.8rem; color:var(--text); border:1px solid var(--border); }
+.sport-athletes { background:var(--surface-2); border:1px solid var(--border); border-radius:16px; overflow:hidden; margin-bottom:20px; }
+.sport-athletes-header { padding:16px 20px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1rem; letter-spacing:1px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+.athletes-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:0; }
+.athlete-item { padding:12px 16px; border-bottom:1px solid var(--border); font-size:.85rem; color:var(--text); display:flex; align-items:center; gap:10px; transition:background .2s ease; }
+.athlete-item:hover { background:var(--surface-3); }
+.athlete-item:last-child { border-bottom:none; }
+.athlete-num { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.75rem; color:var(--muted); min-width:24px; }
+.relay-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; padding:20px; }
+.relay-card { background:var(--surface-3); border:1px solid var(--border); border-radius:12px; padding:16px; transition:all .3s ease; }
+.relay-card:hover { border-color:var(--gold); transform:translateY(-2px); }
+.relay-card-title { font-family:'Space Grotesk',sans-serif; font-weight:700; color:var(--gold); margin-bottom:10px; font-size:.95rem; }
+.relay-card-body { font-size:.85rem; color:var(--muted); line-height:1.8; }
+.music-stage { background:var(--surface-2); border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:20px; }
+.music-stage-header { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.1rem; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; color:var(--teal); }
+.music-item { display:flex; align-items:center; gap:16px; padding:14px 0; border-bottom:1px solid var(--border); }
+.music-item:last-child { border-bottom:none; }
+.music-time { font-family:'Space Grotesk',sans-serif; font-weight:700; color:var(--gold); min-width:60px; font-size:1rem; }
+.music-badge { background:var(--surface-3); color:var(--teal); padding:6px 14px; border-radius:6px; font-size:.75rem; font-weight:700; letter-spacing:1px; min-width:80px; text-align:center; }
+.music-content { font-weight:500; color:var(--text); flex:1; }
+.qf-s { border-left:3px solid var(--green); }
+.semi-s { border-left:3px solid var(--purple); }
+.final-s { border-left:3px solid var(--gold); }
+.admin-btn { background:linear-gradient(135deg, var(--gold), #b8941d); color:#07070a; border:none; padding:10px 20px; border-radius:100px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.85rem; letter-spacing:1px; cursor:pointer; transition:all .3s ease; box-shadow:0 4px 20px rgba(229,184,11,0.3); }
+.admin-btn:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(229,184,11,0.4); }
+.admin-modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.7); z-index:1000; justify-content:center; align-items:center; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
+.admin-modal-overlay.active { display:flex; animation:fadeIn .3s ease; }
+.admin-modal { background:var(--surface); border:1px solid var(--border-strong); border-radius:20px; width:90%; max-width:520px; max-height:90vh; overflow-y:auto; box-shadow:0 40px 80px rgba(0,0,0,.6); }
+.admin-modal-header { background:var(--surface-2); padding:20px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+.admin-modal-header h3 { font-family:'Space Grotesk',sans-serif; font-size:1.2rem; font-weight:700; color:var(--text); letter-spacing:1px; }
+.admin-close { background:none; border:none; color:var(--muted); font-size:1.8rem; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:50%; transition:all .2s ease; }
+.admin-close:hover { background:var(--surface-3); color:var(--text); }
+.admin-modal-body { padding:24px; }
+.admin-form-group { margin-bottom:20px; }
+.admin-form-group label { display:block; font-size:.8rem; font-weight:700; color:var(--muted); margin-bottom:8px; letter-spacing:1px; text-transform:uppercase; }
+.admin-form-group input, .admin-form-group select { width:100%; padding:12px 14px; border:1px solid var(--border); border-radius:10px; background:var(--surface-2); color:var(--text); font-family:'Inter',sans-serif; font-size:.95rem; transition:all .3s ease; }
+.admin-form-group input:focus, .admin-form-group select:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(229,184,11,0.15); }
+.admin-login-btn { width:100%; background:linear-gradient(135deg, var(--gold), #b8941d); color:#07070a; border:none; padding:14px; border-radius:10px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1rem; letter-spacing:1px; cursor:pointer; transition:all .3s ease; }
+.admin-login-btn:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(229,184,11,0.3); }
+.admin-error { color:var(--red); font-size:.85rem; margin-top:8px; display:none; font-weight:600; }
+.admin-panel { display:none; }
+.admin-panel.active { display:block; animation:fadeIn .3s ease; }
+.admin-match-item { background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:12px; transition:all .3s ease; }
+.admin-match-item:hover { border-color:var(--border-strong); }
+.admin-match-title { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.85rem; color:var(--text); margin-bottom:10px; }
+.admin-score-inputs { display:flex; gap:10px; align-items:center; }
+.admin-score-inputs input { width:64px; padding:10px; text-align:center; border:1px solid var(--border); border-radius:8px; background:var(--surface-3); color:var(--text); font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1rem; transition:all .3s ease; }
+.admin-score-inputs input:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(229,184,11,0.15); outline:none; }
+.admin-save-btn { background:var(--green); color:#07070a; border:none; padding:8px 16px; border-radius:8px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.8rem; cursor:pointer; margin-left:auto; transition:all .3s ease; }
+.admin-save-btn:hover { background:#00b873; transform:translateY(-1px); }
+.admin-logout-btn { background:var(--red); color:#fff; border:none; padding:8px 16px; border-radius:8px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.8rem; cursor:pointer; transition:all .3s ease; }
+.admin-logout-btn:hover { background:#dc2626; transform:translateY(-1px); }
+.admin-tabs { display:flex; gap:6px; margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:4px; }
+.admin-tab { background:none; border:none; padding:10px 16px; color:var(--muted); font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.85rem; cursor:pointer; border-bottom:2px solid transparent; border-radius:6px 6px 0 0; transition:all .3s ease; }
+.admin-tab.active { color:var(--gold); border-bottom-color:var(--gold); background:rgba(229,184,11,0.08); }
+.admin-tab:hover { color:var(--text); background:var(--surface-2); }
+.info-card { background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:16px; color:var(--muted); font-size:.9rem; line-height:1.7; }
+.info-card strong { color:var(--gold); }
+@media(max-width:768px){
+  .header-top { padding:20px 16px; flex-direction:column; gap:16px; text-align:center; }
+  .logo-circle { width:56px; height:56px; font-size:24px; }
+  .title-block h1 { font-size:1.8rem; }
+  .header-dates { text-align:center; }
+  .sport-badges { padding:0 16px 16px; justify-content:center; }
+  .page { padding:16px; }
+  .matches-grid { grid-template-columns:1fr; }
+  .groups-grid { grid-template-columns:1fr; }
+  .nav-link { padding:12px 14px; font-size:.8rem; }
+  .relay-grid { grid-template-columns:1fr; padding:12px; }
+  .athletes-grid { grid-template-columns:1fr; }
+}
+::-webkit-scrollbar { width:8px; height:8px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--surface-3); border-radius:4px; }
+::-webkit-scrollbar-thumb:hover { background:var(--border-strong); }
+.gender-badge { font-size:.65rem; font-weight:700; padding:2px 8px; border-radius:4px; margin-left:6px; text-transform:uppercase; letter-spacing:1px; }
+.gender-m { background:rgba(59,130,246,0.15); color:var(--blue); border:1px solid rgba(59,130,246,0.3); }
+.gender-f { background:rgba(239,68,68,0.15); color:var(--red); border:1px solid rgba(239,68,68,0.3); }
+</style>
 </head>
 <body>
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="spinner"></div>
+
+<div id="adminBtnWrap" style="position:fixed;top:20px;right:20px;z-index:200">
+  <button class="admin-btn" onclick="openAdmin()">🔐 ADMIN</button>
+</div>
+
+<div id="adminModal" class="admin-modal-overlay" onclick="if(event.target===this)closeAdmin()">
+  <div class="admin-modal">
+    <div class="admin-modal-header">
+      <h3 id="adminModalTitle">🔐 ADMIN LOGIN</h3>
+      <button class="admin-close" onclick="closeAdmin()">&times;</button>
+    </div>
+    <div class="admin-modal-body">
+      <div id="adminLoginForm">
+        <div class="admin-form-group"><label>USERNAME</label><input type="text" id="adminUser" placeholder="Enter username"></div>
+        <div class="admin-form-group"><label>PASSWORD</label><input type="password" id="adminPass" placeholder="Enter password"></div>
+        <div class="admin-error" id="adminError">Invalid credentials</div>
+        <button class="admin-login-btn" onclick="doLogin()">LOGIN</button>
+      </div>
+      <div id="adminPanel" class="admin-panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+          <span style="font-size:.85rem;color:var(--muted)">Logged in as <strong style="color:var(--gold)">admin</strong></span>
+          <button class="admin-logout-btn" onclick="doLogout()">LOGOUT</button>
+        </div>
+        <div class="admin-tabs">
+          <button class="admin-tab active" onclick="showAdminTab('football',this)">⚽ FOOTBALL</button>
+          <button class="admin-tab" onclick="showAdminTab('volleyball',this)">🏐 VOLLEYBALL</button>
+        </div>
+        <div id="adminFootballTab" class="admin-tab-content"></div>
+        <div id="adminVolleyballTab" class="admin-tab-content" style="display:none"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo-area">
+      <div class="logo-circle">O</div>
+      <div class="title-block">
+        <h1>OLIMPIKI 2026</h1>
+        <p>International Sports Festival · Morijo, Samburu</p>
+      </div>
+    </div>
+    <div class="header-dates">
+      <div class="day">May 19 – 21, 2026</div>
+      <div class="loc">FRIDAY · SATURDAY · SUNDAY</div>
+    </div>
+  </div>
+  <div class="sport-badges">
+    <span class="sport-badge">⚽ FOOTBALL</span>
+    <span class="sport-badge">🏐 VOLLEYBALL</span>
+    <span class="sport-badge">♞ CHESS</span>
+    <span class="sport-badge">🏃 ATHLETICS</span>
+    <span class="sport-badge">🎵 MUSIC</span>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#schedule" class="nav-link active" onclick="activateNav(this)">📋 FULL SCHEDULE</a>
+    <a href="#football" class="nav-link" onclick="activateNav(this)">⚽ FOOTBALL</a>
+    <a href="#volleyball" class="nav-link" onclick="activateNav(this)">🏐 VOLLEYBALL</a>
+    <a href="#chess" class="nav-link" onclick="activateNav(this)">♞ CHESS</a>
+    <a href="#athletics" class="nav-link" onclick="activateNav(this)">🏃 ATHLETICS</a>
+    <a href="#music" class="nav-link" onclick="activateNav(this)">🎵 MUSIC</a>
+  </div>
+</nav>
+
+<!-- ===== SCHEDULE ===== -->
+<div id="schedule" class="section active">
+<div class="page">
+  <div class="section-title">📋 FULL TOURNAMENT SCHEDULE</div>
+
+  <!-- FRIDAY -->
+  <div class="day-block">
+    <div class="day-title day-fri">⬛ FRIDAY · MAY 19</div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--green)"></span>FOOTBALL MEN — GROUP STAGE — Field 1 & Field 2</div>
+    <div class="matches-grid">
+
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Mara Virion</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Barsaloi</span></div><div class="match-footer"><span class="match-type">GRP B · R1</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winterfell</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R2</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP C · R1</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Luly</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R2</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Veterans</span></div><div class="match-footer"><span class="match-type">GRP D · R1</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Pentagon</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R2</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Momida</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Mara Virion</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R4</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Winterfell</span></div><div class="match-footer"><span class="match-type">GRP B · R3</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Barsaloi</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R4</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Luly</span></div><div class="match-footer"><span class="match-type">GRP C · R3</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Nkorika</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R4</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP D · R3</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R4</span></div></div>
     </div>
 
-    <div class="border-pattern"></div>
-
-    <header>
-        <div class="status-badge status-online" id="statusBadge">
-            <span class="status-dot"></span>
-            <span id="statusText">Online</span>
-        </div>
-        <div class="lang-toggle">
-            <button onclick="setLang('en')" id="btn-en" class="active">EN</button>
-            <button onclick="setLang('sw')" id="btn-sw">SW</button>
-        </div>
-        <div class="olympic-rings">&#9679;&#9679;&#9679;&#9679;&#9679;</div>
-        <h1 data-key="mainTitle">Olimpiki za Kwanza za Amani</h1>
-        <div class="subtitle" data-key="subtitle">Athlete Registration — First Peace Olympic Games</div>
-        <div class="event-info">
-            <span>&#128205; Morijo Secondary School Grounds</span>
-            <span>&#128197; 20–21 June 2026</span>
-        </div>
-    </header>
-
-    <main>
-        <div id="alertBox" class="alert"></div>
-
-        <!-- PUBLIC: Registration Form -->
-        <div class="card">
-            <h2 data-key="formTitle">Athlete Registration Form</h2>
-            <form id="athleteForm">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label data-key="lblFirstName">First Name *</label>
-                        <input type="text" id="firstName" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-key="lblLastName">Last Name *</label>
-                        <input type="text" id="lastName" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-key="lblEmail">Email *</label>
-                        <input type="email" id="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-key="lblVillage">Village / Country *</label>
-                        <input type="text" id="village" required placeholder="e.g. Morijo, Arusha, Tanzania">
-                    </div>
-                    <div class="form-group">
-                        <label data-key="lblAge">Age *</label>
-                        <input type="number" id="age" min="12" max="25" required>
-                    </div>
-                    <div class="form-group">
-                        <label data-key="lblGender">Gender *</label>
-                        <select id="gender" required>
-                            <option value="">—</option>
-                            <option value="M" data-key="optMale">Male</option>
-                            <option value="F" data-key="optFemale">Female</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="sports-section">
-                    <label style="font-size: 1rem; margin-bottom: 0.5rem; display: block;" data-key="lblSports">
-                        Select Sports (maximum 2) *
-                    </label>
-                    <p style="font-size: 0.9rem; color: var(--accent); margin-bottom: 1rem;" data-key="sportNote">
-                        Each athlete may register for a maximum of 2 disciplines.
-                    </p>
-
-                    <div class="sports-grid" id="sportsGrid">
-                        <!-- Generated by JS -->
-                    </div>
-                </div>
-
-                <div id="sportDetailsContainer"></div>
-
-                <div class="actions">
-                    <button type="submit" class="btn btn-primary" id="btnSubmit" data-key="btnRegister">Register Athlete</button>
-                    <button type="button" class="btn btn-secondary" onclick="resetForm()" data-key="btnReset">Cancel</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- ORGANIZER LOGIN GATE -->
-        <div class="card login-card" id="organizerLoginCard">
-            <div class="login-icon">&#128274;</div>
-            <h2 data-key="organizerAccess">Organizer Access</h2>
-            <p style="color: var(--brown); margin-bottom: 1.5rem;" data-key="organizerDesc">
-                Enter the organizer password to view registrations, statistics, and the Sport Register.
-            </p>
-            <div class="form-group" style="max-width: 300px; margin: 0 auto 1rem auto;">
-                <label data-key="password">Password</label>
-                <input type="password" id="orgPassword" data-key="passwordPlaceholder" placeholder="Enter password" onkeydown="if(event.key==='Enter')organizerLogin()">
-            </div>
-            <button class="btn btn-primary" onclick="organizerLogin()" data-key="accessDashboard" style="min-width: 200px;">
-                Access Dashboard
-            </button>
-            <p id="loginError" style="color: var(--error); margin-top: 1rem; display: none; font-weight: 700;" data-key="incorrectPassword">
-                Incorrect password.
-            </p>
-        </div>
-
-        <!-- PRIVATE: Organizer Dashboard (hidden by default) -->
-        <div id="organizerDashboard" style="display: none;">
-            
-            <div class="card">
-                <h2 data-key="listTitle">Registered Athletes</h2>
-
-                <div class="stats-bar">
-                    <div class="stat-box">
-                        <span class="stat-number" id="statTotal">0</span>
-                        <span class="stat-label" data-key="statTotal">Total</span>
-                    </div>
-                    <div class="stat-box">
-                        <span class="stat-number" id="statTeam">0</span>
-                        <span class="stat-label" data-key="statTeam">Teams</span>
-                    </div>
-                    <div class="stat-box">
-                        <span class="stat-number" id="statIndividual">0</span>
-                        <span class="stat-label" data-key="statIndividual">Individuals</span>
-                    </div>
-                </div>
-
-                <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
-                    <button class="btn btn-secondary" onclick="exportToExcel()" data-key="btnExcel">&#128202; Export Excel</button>
-                    <button class="btn btn-danger btn-small" onclick="clearAll()" data-key="btnClear">&#128465; Clear All</button>
-                </div>
-
-                <div style="overflow-x: auto;">
-                    <table id="athletesTable">
-                        <thead>
-                            <tr>
-                                <th data-key="thName">Name</th>
-                                <th data-key="thVillage">Village</th>
-                                <th data-key="thSport1">Sport 1</th>
-                                <th data-key="thSport2">Sport 2</th>
-                                <th data-key="thDate">Date</th>
-                                <th data-key="thAction">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="athletesBody">
-                            <tr><td colspan="6" style="text-align:center; color:#888;" data-key="noData">No athletes registered</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- SPORT REGISTER -->
-            <div class="card">
-                <h2>&#127942; Sport Register</h2>
-                <p style="color: var(--brown); margin-bottom: 1rem; font-size: 0.95rem;">
-                    Complete roster organized by sport discipline. Teams show all members; individuals are listed separately.
-                </p>
-                <div id="sportRegisterContainer" class="register-grid">
-                    <div class="register-empty">Loading register...</div>
-                </div>
-            </div>
-
-            <div class="lock-bar">
-                <button class="btn btn-danger" onclick="organizerLogout()" style="min-width: 220px;" data-key="lockDashboard">
-                    &#128274; Lock Dashboard
-                </button>
-            </div>
-        </div>
-    </main>
-
-    <footer>
-        <div data-key="footerTitle">Olimpiki za Kwanza za Amani</div>
-        <div class="motto" data-key="footerMotto">"Peace is built with one heart, one effort, and one dream."</div>
-        <div style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.7;">
-            Sports, Arts, Education, Peace. — Together We Move Forward, Together We Build Peace!
-        </div>
-    </footer>
-
-    <script>
-        // ==================== CONFIG ====================
-        const BIN_ID = '69f23a03aaba882197514709';
-        const API_KEY = '$2a$10$mZ.qMlZMju3bJxDm7vY69u31zv0HwAPxAqBfdfa.Wn25oUJQ76coa';
-        const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
-        const ORGANIZER_PASSWORD = 'Amani2026'; // <-- CHANGE THIS PASSWORD
-
-        // ==================== DATA & CONFIG ====================
-        const SPORTS = [
-            { id: 'football', nameEn: 'Football (11 players)', nameSw: 'Mpira wa Miguu (Wachezaji 11)', type: 'team', min: 11 },
-            { id: 'volleyball', nameEn: 'Volleyball', nameSw: 'Mpira wa Wavu', type: 'team', min: 6 },
-            { id: 'relay4x400', nameEn: '4×400m Relay', nameSw: 'Mbio za Kupokezana 4×400m', type: 'team', min: 4 },
-            { id: 'choir', nameEn: 'Choir Singing', nameSw: 'Shindano la Uimbaji (Kwaya)', type: 'team', min: 3 },
-            { id: 'cross', nameEn: 'Cross Country', nameSw: 'Mbio za Nyika', type: 'individual', min: 1 },
-            { id: 'longjump', nameEn: 'Long Jump', nameSw: 'Rukia Mbali', type: 'individual', min: 1 },
-            { id: 'highjump', nameEn: 'High Jump', nameSw: 'Salto in Alto', type: 'individual', min: 1 },
-            { id: 'chess', nameEn: 'Chess', nameSw: 'Chess (Michezo ya Akili)', type: 'individual', min: 1 },
-            { id: 'shotput', nameEn: 'Shot Put', nameSw: 'Kurusha Tufe', type: 'individual', min: 1 },
-            { id: 'sprint100', nameEn: '100m Sprint', nameSw: 'Mbio za Kasi 100m', type: 'individual', min: 1 },
-            { id: 'sprint200', nameEn: '200m Sprint', nameSw: 'Mbio za Kasi 200m', type: 'individual', min: 1 },
-            { id: 'sprint400', nameEn: '400m Sprint', nameSw: 'Mbio za Kasi 400m', type: 'individual', min: 1 },
-            { id: 'mid3000', nameEn: '3000m Middle Distance', nameSw: 'Mbio za Masaafa ya Kati 3000m', type: 'individual', min: 1 },
-            { id: 'solosinging', nameEn: 'Solo Singing', nameSw: 'Uimbaji wa Mtu Mmoja', type: 'individual', min: 1 }
-        ];
-
-        const TRANSLATIONS = {
-            en: {
-                mainTitle: 'Olimpiki za Kwanza za Amani',
-                subtitle: 'Athlete Registration — First Peace Olympic Games',
-                formTitle: 'Athlete Registration Form',
-                lblFirstName: 'First Name *',
-                lblLastName: 'Last Name *',
-                lblEmail: 'Email *',
-                lblVillage: 'Village / Country *',
-                lblAge: 'Age *',
-                lblGender: 'Gender *',
-                optMale: 'Male',
-                optFemale: 'Female',
-                lblSports: 'Select Sports (maximum 2) *',
-                sportNote: 'Each athlete may register for a maximum of 2 disciplines.',
-                btnRegister: 'Register Athlete',
-                btnReset: 'Cancel',
-                listTitle: 'Registered Athletes',
-                statTotal: 'Total',
-                statTeam: 'Teams',
-                statIndividual: 'Individuals',
-                btnExcel: 'Export Excel',
-                btnClear: 'Clear All',
-                thName: 'Name',
-                thVillage: 'Village',
-                thSport1: 'Sport 1',
-                thSport2: 'Sport 2',
-                thDate: 'Date',
-                thAction: 'Action',
-                noData: 'No athletes registered',
-                footerTitle: 'Olimpiki za Kwanza za Amani',
-                footerMotto: '"Peace is built with one heart, one effort, and one dream."',
-                teamLabel: 'TEAM',
-                individualLabel: 'INDIVIDUAL',
-                minPlayers: 'min. players',
-                teamName: 'Team Name',
-                teamNamePlaceholder: 'Enter your team name',
-                addMember: '+ Add Member',
-                membersList: 'Team members (including you as Captain)',
-                validationSelectSport: 'Please select at least one sport.',
-                validationMaxSports: 'You can select a maximum of 2 sports.',
-                validationTeamMin: (sport, min) => `The discipline "${sport}" requires at least ${min} members (including you).`,
-                validationEmail: 'Please enter a valid email address.',
-                successRegister: 'Athlete registered successfully!',
-                confirmClear: 'Are you sure you want to delete all data?',
-                btnRemove: 'Remove',
-                typeTeam: 'Team',
-                typeIndividual: 'Individual',
-                captainLabel: 'YOU (Captain)',
-                errorLoad: 'Error loading data. Check your Bin ID and API Key.',
-                errorSave: 'Error saving data. Please try again.',
-                statusOnline: 'Online',
-                statusOffline: 'Offline',
-                organizerAccess: 'Organizer Access',
-                organizerDesc: 'Enter the organizer password to view registrations, statistics, and the Sport Register.',
-                password: 'Password',
-                passwordPlaceholder: 'Enter password',
-                accessDashboard: 'Access Dashboard',
-                lockDashboard: 'Lock Dashboard',
-                incorrectPassword: 'Incorrect password.'
-            },
-            sw: {
-                mainTitle: 'Olimpiki za Kwanza za Amani',
-                subtitle: 'Usajili wa Wanamichezo — Michezo ya Kwanza ya Amani',
-                formTitle: 'Fomu ya Usajili wa Mwanamichezo',
-                lblFirstName: 'Jina la Kwanza *',
-                lblLastName: 'Jina la Familia *',
-                lblEmail: 'Barua Pepe *',
-                lblVillage: 'Kijiji / Nchi *',
-                lblAge: 'Umri *',
-                lblGender: 'Jinsia *',
-                optMale: 'Me',
-                optFemale: 'Ke',
-                lblSports: 'Chagua Michezo (kwa idadi ya 2) *',
-                sportNote: 'Kila mwanamichezo anaweza kujiandikisha kwa michezo 2 pekee.',
-                btnRegister: 'Sajili Mwanamichezo',
-                btnReset: 'Ghairi',
-                listTitle: 'Wanamichezo Waliosajiliwa',
-                statTotal: 'Jumla',
-                statTeam: 'Timu',
-                statIndividual: 'Watu Binafsi',
-                btnExcel: 'Pakua Excel',
-                btnClear: 'Futa Zote',
-                thName: 'Jina',
-                thVillage: 'Kijiji',
-                thSport1: 'Mchezo 1',
-                thSport2: 'Mchezo 2',
-                thDate: 'Tarehe',
-                thAction: 'Kitendo',
-                noData: 'Hakuna mwanamichezo aliyesajiliwa',
-                footerTitle: 'Olimpiki za Kwanza za Amani',
-                footerMotto: '"Amani hujengwa kwa moyo mmoja, juhudi moja na ndoto moja."',
-                teamLabel: 'TIMU',
-                individualLabel: 'MTU BINAFsi',
-                minPlayers: 'kadiri ya wachezaji',
-                teamName: 'Jina la Timu',
-                teamNamePlaceholder: 'Weka jina la timu yako',
-                addMember: '+ Ongeza Mwanachama',
-                membersList: 'Wanachama wa timu (wewe kama Kiongozi ukiwemo)',
-                validationSelectSport: 'Tafadhali chagua angalau mchezo mmoja.',
-                validationMaxSports: 'Unaweza kuchagua michezo 2 pekee.',
-                validationTeamMin: (sport, min) => `Mchezo wa "${sport}" unahitaji wachezaji ${min} (wewe ukiwemo).`,
-                validationEmail: 'Tafadhali weka anwani sahihi ya barua pepe.',
-                successRegister: 'Mwanamichezo amesajiliwa kwa mafanikio!',
-                confirmClear: 'Una uhakika unataka kufuta data zote?',
-                btnRemove: 'Ondoa',
-                typeTeam: 'Timu',
-                typeIndividual: 'Mtu Binafsi',
-                captainLabel: 'WEWE (Kiongozi)',
-                errorLoad: 'Hitilafu kupakia data. Angalia Bin ID na API Key.',
-                errorSave: 'Hitilafu kuhifadhi data. Tafadhali jaribu tena.',
-                statusOnline: 'Mtandao',
-                statusOffline: 'Hakuna Mtandao',
-                organizerAccess: 'Ufikiaji wa Mwandaaji',
-                organizerDesc: 'Weka neno la siri la mwandaaji kuona usajili, takwimu, na Rejesta ya Michezo.',
-                password: 'Neno la Siri',
-                passwordPlaceholder: 'Weka neno la siri',
-                accessDashboard: 'Fungua Dashibodi',
-                lockDashboard: 'Funga Dashibodi',
-                incorrectPassword: 'Neno la siri sio sahihi.'
-            }
-        };
-
-        let currentLang = 'en';
-        let selectedSports = [];
-        let athletes = [];
-
-        // ==================== ONLINE / OFFLINE STATUS ====================
-        function updateOnlineStatus() {
-            const badge = document.getElementById('statusBadge');
-            const text = document.getElementById('statusText');
-            const isOnline = navigator.onLine;
-
-            if (isOnline) {
-                badge.className = 'status-badge status-online';
-                text.textContent = t('statusOnline');
-            } else {
-                badge.className = 'status-badge status-offline';
-                text.textContent = t('statusOffline');
-            }
-        }
-
-        window.addEventListener('online', updateOnlineStatus);
-        window.addEventListener('offline', updateOnlineStatus);
-
-        // ==================== ORGANIZER AUTH ====================
-        function isOrganizerLoggedIn() {
-            return sessionStorage.getItem('olimpicOrganizer') === 'true';
-        }
-
-        function organizerLogin() {
-            const input = document.getElementById('orgPassword').value.trim();
-            const errorMsg = document.getElementById('loginError');
-
-            if (input === ORGANIZER_PASSWORD) {
-                sessionStorage.setItem('olimpicOrganizer', 'true');
-                errorMsg.style.display = 'none';
-                showOrganizerDashboard();
-                loadData(); // refresh data when entering dashboard
-            } else {
-                errorMsg.style.display = 'block';
-                document.getElementById('orgPassword').value = '';
-                document.getElementById('orgPassword').focus();
-            }
-        }
-
-        function organizerLogout() {
-            sessionStorage.removeItem('olimpicOrganizer');
-            hideOrganizerDashboard();
-        }
-
-        function showOrganizerDashboard() {
-            document.getElementById('organizerLoginCard').style.display = 'none';
-            document.getElementById('organizerDashboard').style.display = 'block';
-            document.getElementById('orgPassword').value = '';
-        }
-
-        function hideOrganizerDashboard() {
-            document.getElementById('organizerLoginCard').style.display = 'block';
-            document.getElementById('organizerDashboard').style.display = 'none';
-        }
-
-        function checkOrganizerSession() {
-            if (isOrganizerLoggedIn()) {
-                showOrganizerDashboard();
-            } else {
-                hideOrganizerDashboard();
-            }
-        }
-
-        // ==================== JSONBIN API ====================
-        function setLoading(show) {
-            document.getElementById('loadingOverlay').classList.toggle('active', show);
-            document.getElementById('btnSubmit').disabled = show;
-        }
-
-        async function fetchAthletes() {
-            const res = await fetch(BIN_URL, {
-                headers: { 'X-Master-Key': API_KEY }
-            });
-            if (!res.ok) throw new Error('Load failed');
-            const data = await res.json();
-            return data.record.athletes || [];
-        }
-
-        async function loadData() {
-            if (!isOrganizerLoggedIn()) return;
-            setLoading(true);
-            try {
-                athletes = await fetchAthletes();
-            } catch (err) {
-                console.error(err);
-                showAlert(t('errorLoad'), 'error');
-                athletes = [];
-            }
-            renderAthletesTable();
-            updateStats();
-            renderSportRegister();
-            setLoading(false);
-        }
-
-        async function saveData() {
-            setLoading(true);
-            try {
-                const res = await fetch(BIN_URL, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': API_KEY
-                    },
-                    body: JSON.stringify({ athletes })
-                });
-                if (!res.ok) throw new Error('Save failed');
-            } catch (err) {
-                console.error(err);
-                showAlert(t('errorSave'), 'error');
-            }
-            setLoading(false);
-        }
-
-        // ==================== INIT ====================
-        document.addEventListener('DOMContentLoaded', () => {
-            renderSportsGrid();
-            updateOnlineStatus();
-            checkOrganizerSession();
-            if (isOrganizerLoggedIn()) {
-                loadData();
-            }
-        });
-
-        // ==================== LANGUAGE ====================
-        function setLang(lang) {
-            currentLang = lang;
-            document.documentElement.lang = lang === 'sw' ? 'sw' : 'en';
-            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-            document.getElementById('btn-sw').classList.toggle('active', lang === 'sw');
-
-            document.querySelectorAll('[data-key]').forEach(el => {
-                const key = el.getAttribute('data-key');
-                const val = TRANSLATIONS[lang][key];
-                if (val) {
-                    if (typeof val === 'function') return;
-                    el.textContent = val;
-                }
-            });
-
-            renderSportsGrid();
-            renderSportDetails();
-            if (isOrganizerLoggedIn()) {
-                renderAthletesTable();
-                renderSportRegister();
-            }
-            updateOnlineStatus();
-        }
-
-        function t(key, ...args) {
-            const val = TRANSLATIONS[currentLang][key];
-            return typeof val === 'function' ? val(...args) : val;
-        }
-
-        // ==================== SPORTS GRID ====================
-        function renderSportsGrid() {
-            const grid = document.getElementById('sportsGrid');
-            grid.innerHTML = '';
-
-            SPORTS.forEach(sport => {
-                const card = document.createElement('div');
-                card.className = 'sport-card' + (selectedSports.includes(sport.id) ? ' selected' : '');
-                if (selectedSports.length >= 2 && !selectedSports.includes(sport.id)) {
-                    card.classList.add('disabled');
-                }
-                card.dataset.id = sport.id;
-                card.onclick = () => toggleSport(sport.id);
-
-                const name = currentLang === 'sw' ? sport.nameSw : sport.nameEn;
-                const typeLabel = sport.type === 'team' ? t('teamLabel') : t('individualLabel');
-                const minInfo = sport.type === 'team' 
-                    ? `<div style="font-size:0.8rem;color:var(--accent);margin-top:4px;">min. ${sport.min} ${currentLang==='sw'?'wachezaji':'players'}</div>` 
-                    : '';
-
-                card.innerHTML = `
-                    <input type="checkbox" class="sport-checkbox" ${selectedSports.includes(sport.id) ? 'checked' : ''} onclick="event.stopPropagation()">
-                    <div style="font-weight:700;color:var(--brown-dark);">${name}</div>
-                    <div class="sport-type">${typeLabel}</div>
-                    ${minInfo}
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function toggleSport(sportId) {
-            if (selectedSports.includes(sportId)) {
-                selectedSports = selectedSports.filter(id => id !== sportId);
-            } else {
-                if (selectedSports.length >= 2) {
-                    showAlert(t('validationMaxSports'), 'error');
-                    return;
-                }
-                selectedSports.push(sportId);
-            }
-            renderSportsGrid();
-            renderSportDetails();
-        }
-
-        // ==================== SPORT DETAILS ====================
-        function renderSportDetails() {
-            const container = document.getElementById('sportDetailsContainer');
-            container.innerHTML = '';
-
-            selectedSports.forEach(sportId => {
-                const sport = SPORTS.find(s => s.id === sportId);
-                if (!sport) return;
-
-                const div = document.createElement('div');
-                div.className = 'sport-details active';
-                div.dataset.sportId = sportId;
-
-                const name = currentLang === 'sw' ? sport.nameSw : sport.nameEn;
-
-                if (sport.type === 'team') {
-                    div.innerHTML = `
-                        <h3 style="font-family:Cinzel;color:var(--brown);margin-bottom:1rem;">${name}</h3>
-                        <div class="team-name-box">
-                            <label>${t('teamName')} *</label>
-                            <input type="text" class="team-name-input" data-sport="${sportId}" required 
-                                placeholder="${t('teamNamePlaceholder')}">
-                        </div>
-                        <div class="team-members">
-                            <label>${t('membersList')} — <span style="color:var(--accent);">min ${sport.min}</span></label>
-                            <div class="members-list" data-sport="${sportId}">
-                                <div class="member-row" style="background:rgba(201,162,39,0.1);padding:0.5rem;border-radius:4px;">
-                                    <input type="text" value="${t('captainLabel')}" disabled style="grid-column:1/3;">
-                                    <span style="font-size:0.8rem;color:var(--brown);">CAPTAIN</span>
-                                </div>
-                            </div>
-                            <button type="button" class="btn btn-secondary btn-small" onclick="addMemberRow('${sportId}')" style="margin-top:0.5rem;">
-                                ${t('addMember')}
-                            </button>
-                        </div>
-                    `;
-                } else {
-                    div.innerHTML = `
-                        <h3 style="font-family:Cinzel;color:var(--brown);">${name}</h3>
-                        <p style="color:#666;font-size:0.9rem;margin-top:0.5rem;">${currentLang==='sw'?'Ushiriki wa mtu binafsi umethibitishwa.':'Individual participation confirmed.'}</p>
-                    `;
-                }
-
-                container.appendChild(div);
-            });
-        }
-
-        function addMemberRow(sportId) {
-            const list = document.querySelector(`.members-list[data-sport="${sportId}"]`);
-            const row = document.createElement('div');
-            row.className = 'member-row';
-            row.innerHTML = `
-                <input type="text" placeholder="${currentLang==='sw'?'Jina la mwanachama':'Member name'}" class="member-name" required>
-                <input type="number" placeholder="${currentLang==='sw'?'Umri':'Age'}" class="member-age" min="12" max="25" required>
-                <button type="button" class="btn btn-danger btn-small" onclick="this.parentElement.remove()">×</button>
-            `;
-            list.appendChild(row);
-        }
-
-        // ==================== FORM SUBMIT ====================
-        document.getElementById('athleteForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            if (selectedSports.length === 0) {
-                showAlert(t('validationSelectSport'), 'error');
-                return;
-            }
-
-            const email = document.getElementById('email').value.trim();
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                showAlert(t('validationEmail'), 'error');
-                return;
-            }
-
-            const firstName = document.getElementById('firstName').value.trim();
-            const lastName = document.getElementById('lastName').value.trim();
-            const village = document.getElementById('village').value.trim();
-            const age = parseInt(document.getElementById('age').value);
-            const gender = document.getElementById('gender').value;
-
-            const sportsData = [];
-
-            for (const sportId of selectedSports) {
-                const sport = SPORTS.find(s => s.id === sportId);
-                if (sport.type === 'team') {
-                    const teamNameInput = document.querySelector(`.team-name-input[data-sport="${sportId}"]`);
-                    const teamName = teamNameInput ? teamNameInput.value.trim() : '';
-                    if (!teamName) {
-                        showAlert(`${currentLang==='sw'?'Weka jina la timu kwa':'Enter the team name for'} ${currentLang==='sw'?sport.nameSw:sport.nameEn}`, 'error');
-                        return;
-                    }
-
-                    const memberRows = document.querySelectorAll(`.members-list[data-sport="${sportId}"] .member-row:not([style*="background"])`);
-                    const members = [{ name: firstName + ' ' + lastName + ' (C)', age, gender, role: 'Captain' }];
-                    memberRows.forEach(row => {
-                        const mName = row.querySelector('.member-name').value.trim();
-                        const mAge = row.querySelector('.member-age').value;
-                        if (mName) {
-                            members.push({ name: mName, age: parseInt(mAge) || age, gender: '-', role: 'Player' });
-                        }
-                    });
-
-                    if (members.length < sport.min) {
-                        showAlert(t('validationTeamMin', currentLang==='sw'?sport.nameSw:sport.nameEn, sport.min), 'error');
-                        return;
-                    }
-
-                    sportsData.push({
-                        id: sportId,
-                        name: currentLang==='sw'?sport.nameSw:sport.nameEn,
-                        type: 'team',
-                        teamName: teamName,
-                        members: members
-                    });
-                } else {
-                    sportsData.push({
-                        id: sportId,
-                        name: currentLang==='sw'?sport.nameSw:sport.nameEn,
-                        type: 'individual'
-                    });
-                }
-            }
-
-            const athlete = {
-                id: Date.now(),
-                firstName,
-                lastName,
-                email,
-                village,
-                age,
-                gender,
-                sports: sportsData,
-                registeredAt: new Date().toLocaleString()
-            };
-
-            // Fetch current data from JSONBin before saving to avoid overwriting other registrations
-            setLoading(true);
-            try {
-                athletes = await fetchAthletes();
-            } catch (err) {
-                console.error('Could not pre-fetch athletes, proceeding with local array:', err);
-            }
-            athletes.push(athlete);
-            await saveData();
-
-            showAlert(t('successRegister'), 'success');
-            resetForm();
-            if (isOrganizerLoggedIn()) {
-                renderAthletesTable();
-                updateStats();
-                renderSportRegister();
-            }
-        });
-
-        function resetForm() {
-            document.getElementById('athleteForm').reset();
-            selectedSports = [];
-            renderSportsGrid();
-            renderSportDetails();
-        }
-
-        // ==================== ALERTS ====================
-        function showAlert(msg, type) {
-            const box = document.getElementById('alertBox');
-            box.textContent = msg;
-            box.className = 'alert alert-' + type + ' show';
-            setTimeout(() => box.classList.remove('show'), 4000);
-        }
-
-        // ==================== TABLE ====================
-        function renderAthletesTable() {
-            const tbody = document.getElementById('athletesBody');
-            if (athletes.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#888;">${t('noData')}</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = athletes.map(a => {
-                const s1 = a.sports[0];
-                const s2 = a.sports[1];
-                const badge1 = s1 ? `<span class="badge badge-${s1.type}">${s1.type==='team'?t('typeTeam'):t('typeIndividual')}</span> ${s1.name}${s1.type==='team'?` <small style="color:var(--accent)">[${s1.teamName}]</small>`:''}` : '—';
-                const badge2 = s2 ? `<span class="badge badge-${s2.type}">${s2.type==='team'?t('typeTeam'):t('typeIndividual')}</span> ${s2.name}${s2.type==='team'?` <small style="color:var(--accent)">[${s2.teamName}]</small>`:''}` : '—';
-
-                return `
-                    <tr>
-                        <td><strong>${a.firstName} ${a.lastName}</strong><br><small style="color:#888;">${a.gender==='M'?'♂':'♀'} ${a.age} yrs — ${a.email}</small></td>
-                        <td>${a.village}</td>
-                        <td>${badge1}</td>
-                        <td>${badge2}</td>
-                        <td>${a.registeredAt}</td>
-                        <td><button class="btn btn-danger btn-small" onclick="deleteAthlete(${a.id})">${t('btnRemove')}</button></td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        async function deleteAthlete(id) {
-            athletes = athletes.filter(a => a.id !== id);
-            await saveData();
-            renderAthletesTable();
-            updateStats();
-            renderSportRegister();
-        }
-
-        async function clearAll() {
-            if (!confirm(t('confirmClear'))) return;
-            athletes = [];
-            await saveData();
-            renderAthletesTable();
-            updateStats();
-            renderSportRegister();
-        }
-
-        function updateStats() {
-            document.getElementById('statTotal').textContent = athletes.length;
-            const teamCount = athletes.filter(a => a.sports.some(s => s.type === 'team')).length;
-            const indCount = athletes.filter(a => a.sports.every(s => s.type === 'individual')).length;
-            document.getElementById('statTeam').textContent = teamCount;
-            document.getElementById('statIndividual').textContent = indCount;
-        }
-
-        // ==================== SPORT REGISTER ====================
-        function renderSportRegister() {
-            const container = document.getElementById('sportRegisterContainer');
-            container.innerHTML = '';
-
-            SPORTS.forEach(sport => {
-                const sportName = currentLang === 'sw' ? sport.nameSw : sport.nameEn;
-                const card = document.createElement('div');
-                card.className = 'register-card';
-
-                // Gather data for this sport
-                const teams = [];
-                const individuals = [];
-
-                athletes.forEach(athlete => {
-                    athlete.sports.forEach(s => {
-                        if (s.id === sport.id) {
-                            if (s.type === 'team' && s.members) {
-                                teams.push({
-                                    teamName: s.teamName,
-                                    members: s.members,
-                                    village: athlete.village,
-                                    captainEmail: athlete.email
-                                });
-                            } else if (s.type === 'individual') {
-                                individuals.push({
-                                    name: `${athlete.firstName} ${athlete.lastName}`,
-                                    village: athlete.village,
-                                    age: athlete.age,
-                                    gender: athlete.gender,
-                                    email: athlete.email
-                                });
-                            }
-                        }
-                    });
-                });
-
-                const totalCount = teams.reduce((sum, t) => sum + t.members.length, 0) + individuals.length;
-
-                let bodyHtml = '';
-
-                if (sport.type === 'team') {
-                    if (teams.length === 0) {
-                        bodyHtml = `<div class="register-empty">${currentLang==='sw'?'Hakuna timu zilizosajiliwa.':'No teams registered.'}</div>`;
-                    } else {
-                        teams.forEach(team => {
-                            const membersHtml = team.members.map(m => {
-                                const roleBadge = m.role === 'Captain' 
-                                    ? `<span class="role" style="color:var(--gold);font-weight:700;">[${m.role}]</span>` 
-                                    : `<span class="role">[${m.role}]</span>`;
-                                return `<div class="register-member">${m.name} ${roleBadge}</div>`;
-                            }).join('');
-                            bodyHtml += `
-                                <div class="register-team-block">
-                                    <div class="register-team-name">${team.teamName}</div>
-                                    <div style="font-size:0.8rem;color:var(--brown);margin-bottom:0.4rem;padding-left:1.5rem;">
-                                        ${team.village} &bull; Captain: ${team.captainEmail}
-                                    </div>
-                                    ${membersHtml}
-                                </div>
-                            `;
-                        });
-                    }
-                } else {
-                    if (individuals.length === 0) {
-                        bodyHtml = `<div class="register-empty">${currentLang==='sw'?'Hakuna washiriki waliosajiliwa.':'No participants registered.'}</div>`;
-                    } else {
-                        bodyHtml = individuals.map(ind => `
-                            <div class="register-individual">
-                                <span><strong>${ind.name}</strong> <span class="info">(${ind.village}, ${ind.age} yrs, ${ind.gender==='M'?'♂':'♀'})</span></span>
-                            </div>
-                        `).join('');
-                    }
-                }
-
-                card.innerHTML = `
-                    <div class="register-header">
-                        <span>${sportName}</span>
-                        <span class="count">${totalCount}</span>
-                    </div>
-                    <div class="register-body">
-                        ${bodyHtml}
-                    </div>
-                `;
-
-                container.appendChild(card);
-            });
-        }
-
-        // ==================== EXCEL EXPORT ====================
-        function exportToExcel() {
-            if (athletes.length === 0) {
-                showAlert(currentLang==='sw'?'Hakuna data ya kupakua.':'No data to export.', 'error');
-                return;
-            }
-
-            const wb = XLSX.utils.book_new();
-
-            // --- Sheet 1: Summary (all registrants) ---
-            const summaryRows = athletes.map(a => {
-                const s1 = a.sports[0] || {};
-                const s2 = a.sports[1] || {};
-                return {
-                    'ID': a.id,
-                    'First Name': a.firstName,
-                    'Last Name': a.lastName,
-                    'Email': a.email,
-                    'Village / Country': a.village,
-                    'Age': a.age,
-                    'Gender': a.gender,
-                    'Sport 1': s1.name || '',
-                    'Type 1': s1.type || '',
-                    'Team 1': s1.teamName || '',
-                    'Sport 2': s2.name || '',
-                    'Type 2': s2.type || '',
-                    'Team 2': s2.teamName || '',
-                    'Registered At': a.registeredAt
-                };
-            });
-            const wsSummary = XLSX.utils.json_to_sheet(summaryRows);
-            wsSummary['!cols'] = [
-                {wch:12},{wch:15},{wch:15},{wch:28},{wch:22},{wch:6},{wch:8},
-                {wch:24},{wch:10},{wch:20},
-                {wch:24},{wch:10},{wch:20},
-                {wch:20}
-            ];
-            XLSX.utils.book_append_sheet(wb, wsSummary, 'Summary');
-
-            // --- Sheet 2: Team Roster (expanded members) ---
-            const teamRoster = [];
-            athletes.forEach(a => {
-                a.sports.forEach(s => {
-                    if (s.type === 'team' && s.members) {
-                        s.members.forEach(m => {
-                            teamRoster.push({
-                                'Sport': s.name,
-                                'Team Name': s.teamName,
-                                'Member Name': m.name,
-                                'Age': m.age,
-                                'Gender': m.gender,
-                                'Village / Country': a.village,
-                                'Role': m.role,
-                                'Captain Email': m.role === 'Captain' ? a.email : '',
-                                'Registered At': a.registeredAt
-                            });
-                        });
-                    }
-                });
-            });
-
-            if (teamRoster.length > 0) {
-                teamRoster.sort((a, b) => {
-                    if (a.Sport !== b.Sport) return a.Sport.localeCompare(b.Sport);
-                    return a['Team Name'].localeCompare(b['Team Name']);
-                });
-                const wsTeams = XLSX.utils.json_to_sheet(teamRoster);
-                wsTeams['!cols'] = [
-                    {wch:24},{wch:22},{wch:22},{wch:6},{wch:8},{wch:22},{wch:12},{wch:28},{wch:20}
-                ];
-                XLSX.utils.book_append_sheet(wb, wsTeams, 'Team Roster');
-            }
-
-            // --- Sheet 3: Individual Athletes ---
-            const individualRows = [];
-            athletes.forEach(a => {
-                a.sports.forEach(s => {
-                    if (s.type === 'individual') {
-                        individualRows.push({
-                            'First Name': a.firstName,
-                            'Last Name': a.lastName,
-                            'Email': a.email,
-                            'Village / Country': a.village,
-                            'Age': a.age,
-                            'Gender': a.gender,
-                            'Sport': s.name,
-                            'Registered At': a.registeredAt
-                        });
-                    }
-                });
-            });
-
-            if (individualRows.length > 0) {
-                individualRows.sort((a, b) => a.Sport.localeCompare(b.Sport));
-                const wsInd = XLSX.utils.json_to_sheet(individualRows);
-                wsInd['!cols'] = [
-                    {wch:15},{wch:15},{wch:28},{wch:22},{wch:6},{wch:8},{wch:24},{wch:20}
-                ];
-                XLSX.utils.book_append_sheet(wb, wsInd, 'Individual Athletes');
-            }
-
-            // --- Sheets per sport di squadra (separate by sport & team) ---
-            const teamSports = [...new Set(athletes.flatMap(a => a.sports.filter(s => s.type === 'team').map(s => s.id)))];
-            teamSports.forEach(sportId => {
-                const sport = SPORTS.find(s => s.id === sportId);
-                const sportName = sport ? (currentLang==='sw'?sport.nameSw:sport.nameEn) : sportId;
-                const sheetName = sportName.replace(/[^a-zA-Z0-9 ]/g, '').substring(0, 28) || 'Team';
-
-                const sportTeams = [];
-                athletes.forEach(a => {
-                    a.sports.forEach(s => {
-                        if (s.id === sportId && s.type === 'team') {
-                            s.members.forEach(m => {
-                                sportTeams.push({
-                                    'Team Name': s.teamName,
-                                    'Member Name': m.name,
-                                    'Age': m.age,
-                                    'Gender': m.gender,
-                                    'Village / Country': a.village,
-                                    'Role': m.role,
-                                    'Captain Email': m.role === 'Captain' ? a.email : '',
-                                    'Registered At': a.registeredAt
-                                });
-                            });
-                        }
-                    });
-                });
-
-                if (sportTeams.length > 0) {
-                    sportTeams.sort((a, b) => a['Team Name'].localeCompare(b['Team Name']));
-                    const wsSport = XLSX.utils.json_to_sheet(sportTeams);
-                    wsSport['!cols'] = [
-                        {wch:22},{wch:22},{wch:6},{wch:8},{wch:22},{wch:12},{wch:28},{wch:20}
-                    ];
-                    XLSX.utils.book_append_sheet(wb, wsSport, sheetName);
-                }
-            });
-
-            const filename = currentLang === 'sw' 
-                ? 'Usajili_Wanamichezo_Olimpiki.xlsx' 
-                : 'Athlete_Registration_Olimpiki.xlsx';
-            XLSX.writeFile(wb, filename);
-        }
-    </script>
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--purple)"></span>VOLLEYBALL MEN — GROUP STAGE — Court 1 & Court 2</div>
+    <div class="matches-grid">
+
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Barsalo</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Barsalo</span></div><div class="match-footer"><span class="match-type">GRP A · R4</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R5</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R6</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Barsalo</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R7</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Angata</span></div><div class="match-footer"><span class="match-type">GRP A · R8</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Marti</span></div><div class="match-footer"><span class="match-type">GRP A · R9</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Pentagon</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP A · R10</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Barsalo</span></div><div class="match-footer"><span class="match-type">GRP B · R11</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Poro Venom</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP B · R12</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP B · R13</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Poro Venom</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP B · R14</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Marti</span></div><div class="match-footer"><span class="match-type">GRP B · R15</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Poro Venom</span></div><div class="match-footer"><span class="match-type">GRP B · R16</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--purple)"></span>VOLLEYBALL WOMEN — GROUP STAGE — Court 3</div>
+    <div class="matches-grid">
+
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Barsaloi Roses</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon Ladies</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Barsaloi Roses</span><span class="match-vs">vs</span><span class="match-team-away">Miami Angels</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Pentagon Ladies</span><span class="match-vs">vs</span><span class="match-team-away">Miami Angels</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Morijo Girls</span><span class="match-vs">vs</span><span class="match-team-away">Samburu Queens</span></div><div class="match-footer"><span class="match-type">GRP B · R1</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Morijo Girls</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika Starlets</span></div><div class="match-footer"><span class="match-type">GRP B · R2</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Samburu Queens</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika Starlets</span></div><div class="match-footer"><span class="match-type">GRP B · R3</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--teal)"></span>MUSIC — QUALIFICATIONS & EXHIBITIONS</div>
+    <div class="matches-grid">
+
+<div class="match-card "><div class="match-card-header"><span class="match-time">18:00</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Choir Qualifications — Round 1</span></div><div class="match-footer"><span class="match-type">MUS · QUAL</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">19:30</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Exhibition Performances</span></div><div class="match-footer"><span class="match-type">MUS · EXHIB</span></div></div>
+    </div>
+  </div>
+
+  <!-- SATURDAY -->
+  <div class="day-block">
+    <div class="day-title day-sat">⬛ SATURDAY · MAY 20</div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--green)"></span>FOOTBALL MEN — GROUP STAGE — Field 1 & Field 2</div>
+    <div class="matches-grid">
+
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R5</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Mara Virion</span><span class="match-vs">vs</span><span class="match-team-away">Momida</span></div><div class="match-footer"><span class="match-type">GRP A · R6</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R5</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Barsaloi</span><span class="match-vs">vs</span><span class="match-team-away">Winterfell</span></div><div class="match-footer"><span class="match-type">GRP B · R6</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R5</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Nkorika</span><span class="match-vs">vs</span><span class="match-team-away">Luly</span></div><div class="match-footer"><span class="match-type">GRP C · R6</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R5</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP D · R6</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--green)"></span>FOOTBALL MEN — QUARTER-FINALS — Field 1 & Field 2</div>
+    <div class="matches-grid">
+
+<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">QF 1</span></div></div>
+<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">1st Group C</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group D</span></div><div class="match-footer"><span class="match-type">QF 2</span></div></div>
+<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">QF 3</span></div></div>
+<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">1st Group D</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group C</span></div><div class="match-footer"><span class="match-type">QF 4</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--red)"></span>ATHLETICS — TRACK & FIELD</div>
+    <div class="matches-grid">
+
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">100m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">200m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">400m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">12:00</span><span class="match-field">FIELD</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Long Jump & Shot Put — Qualifying</span></div><div class="match-footer"><span class="match-type">ATH · QUAL</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">3000m Middle Distance — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">4x400m Relay — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--teal)"></span>MUSIC — QUALIFICATIONS & EXHIBITIONS</div>
+    <div class="matches-grid">
+
+<div class="match-card "><div class="match-card-header"><span class="match-time">18:00</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Choir Qualifications — Round 2</span></div><div class="match-footer"><span class="match-type">MUS · QUAL</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">19:30</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Exhibition Performances</span></div><div class="match-footer"><span class="match-type">MUS · EXHIB</span></div></div>
+    </div>
+  </div>
+
+  <!-- SUNDAY — FINALS DAY -->
+  <div class="day-block">
+    <div class="day-title day-sun">⬛ SUNDAY · MAY 21 — FINALS DAY</div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--purple)"></span>VOLLEYBALL MEN — SEMIFINALS — Court 1 & Court 2</div>
+    <div class="matches-grid">
+
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div>
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--purple)"></span>VOLLEYBALL WOMEN — SEMIFINALS — Court 3</div>
+    <div class="matches-grid">
+
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div>
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--green)"></span>FOOTBALL WOMEN — FINAL — Field 1</div>
+    <div class="matches-grid">
+
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Morijo mix girls</span><span class="match-vs">vs</span><span class="match-team-away">Luxury FC</span></div><div class="match-footer"><span class="match-type">🏆 WOMEN FINAL</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--green)"></span>FOOTBALL MEN — SEMIFINALS — Field 1 & Field 2</div>
+    <div class="matches-grid">
+
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Winner QF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner QF2</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div>
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winner QF3</span><span class="match-vs">vs</span><span class="match-team-away">Winner QF4</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--red)"></span>ATHLETICS — FINALS</div>
+    <div class="matches-grid">
+
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">09:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">100m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">200m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">10:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">400m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">3000m Middle Distance — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">11:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">4x400m Relay — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">12:00</span><span class="match-field">FIELD</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Long Jump · Shot Put · High Jump — FINALS</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">12:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Cross Country — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--green)"></span>FOOTBALL MEN — 3RD PLACE — Field 1</div>
+    <div class="matches-grid">
+
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--purple)"></span>VOLLEYBALL MEN — 3RD PLACE — Court 1</div>
+    <div class="matches-grid">
+
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--purple)"></span>VOLLEYBALL WOMEN — 3RD PLACE — Court 3</div>
+    <div class="matches-grid">
+
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--green)"></span>FOOTBALL MEN — FINAL — Field 2</div>
+    <div class="matches-grid">
+
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 FINAL</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--purple)"></span>VOLLEYBALL MEN — FINAL — Court 1</div>
+    <div class="matches-grid">
+
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 FINAL</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--purple)"></span>VOLLEYBALL WOMEN — FINAL — Court 3</div>
+    <div class="matches-grid">
+
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 FINAL</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--teal)"></span>MUSIC — FINALS</div>
+    <div class="matches-grid">
+
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Choir Finals — Before Closing Ceremony</span></div><div class="match-footer"><span class="match-type">MUS · FINAL</span></div></div>
+    </div>
+
+    <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--gold)"></span>CLOSING CEREMONY</div>
+    <div class="matches-grid">
+
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">🏆 Awards Ceremony — All Champions & Closing</span></div><div class="match-footer"><span class="match-type">CLOSING</span></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== FOOTBALL ===== -->
+<div id="football" class="section">
+<div class="page">
+  <div class="section-title">⚽ FOOTBALL</div>
+
+  <div class="info-card">
+    <strong>TOURNAMENT FORMAT</strong><br>
+    16 men's teams divided into 4 groups of 4. Top 2 from each group advance to the quarter-finals.<br>
+    All knockout matches (quarter-finals) conclude Saturday afternoon. Semi-finals Sunday morning, Finals Sunday afternoon.<br>
+    Women's Final: Sunday 09:00 on Field 1.
+  </div>
+
+  <div class="section-title" style="font-size:1.2rem;margin-top:32px">MEN&#39;S GROUPS</div>
+  <div class="groups-grid">
+
+<div class="group-card"><div class="group-header"><span class="group-label">GROUP A</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Green Boys Army</span></div>
+<div class="group-team"><div class="team-num">2</div><span>Mara Virion</span></div>
+<div class="group-team"><div class="team-num">3</div><span>Momida</span></div>
+<div class="group-team"><div class="team-num">4</div><span>Morijo Soccer</span></div></div></div>
+<div class="group-card"><div class="group-header"><span class="group-label">GROUP B</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Nkurkur (GSU)</span></div>
+<div class="group-team"><div class="team-num">2</div><span>Barsaloi</span></div>
+<div class="group-team"><div class="team-num">3</div><span>Winterfell</span></div>
+<div class="group-team"><div class="team-num">4</div><span>Mini Majors</span></div></div></div>
+<div class="group-card"><div class="group-header"><span class="group-label">GROUP C</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Miami</span></div>
+<div class="group-team"><div class="team-num">2</div><span>Nkorika</span></div>
+<div class="group-team"><div class="team-num">3</div><span>Luly</span></div>
+<div class="group-team"><div class="team-num">4</div><span>Morijo senior original</span></div></div></div>
+<div class="group-card"><div class="group-header"><span class="group-label">GROUP D</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Marti</span></div>
+<div class="group-team"><div class="team-num">2</div><span>Veterans</span></div>
+<div class="group-team"><div class="team-num">3</div><span>Pentagon</span></div>
+<div class="group-team"><div class="team-num">4</div><span>Transmillam</span></div></div></div>
+  </div>
+
+  <div class="section-title" style="font-size:1.2rem;margin-top:32px">MEN&#39;S SCHEDULE</div>
+
+  <div class="day-block">
+    <div class="day-title day-fri">FRIDAY · MAY 19 — GROUP STAGE</div>
+    <div class="matches-grid">
+
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Mara Virion</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Barsaloi</span></div><div class="match-footer"><span class="match-type">GRP B · R1</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winterfell</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R2</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP C · R1</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Luly</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R2</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Veterans</span></div><div class="match-footer"><span class="match-type">GRP D · R1</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Pentagon</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R2</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Momida</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Mara Virion</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R4</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Winterfell</span></div><div class="match-footer"><span class="match-type">GRP B · R3</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Barsaloi</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R4</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Luly</span></div><div class="match-footer"><span class="match-type">GRP C · R3</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Nkorika</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R4</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP D · R3</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R4</span></div></div>
+    </div>
+  </div>
+
+  <div class="day-block">
+    <div class="day-title day-sat">SATURDAY · MAY 20 — GROUP STAGE & QUARTER-FINALS</div>
+    <div class="matches-grid">
+
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R5</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Mara Virion</span><span class="match-vs">vs</span><span class="match-team-away">Momida</span></div><div class="match-footer"><span class="match-type">GRP A · R6</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R5</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Barsaloi</span><span class="match-vs">vs</span><span class="match-team-away">Winterfell</span></div><div class="match-footer"><span class="match-type">GRP B · R6</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R5</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Nkorika</span><span class="match-vs">vs</span><span class="match-team-away">Luly</span></div><div class="match-footer"><span class="match-type">GRP C · R6</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R5</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP D · R6</span></div></div>
+<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">QF 1</span></div></div>
+<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">1st Group C</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group D</span></div><div class="match-footer"><span class="match-type">QF 2</span></div></div>
+<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">QF 3</span></div></div>
+<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">1st Group D</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group C</span></div><div class="match-footer"><span class="match-type">QF 4</span></div></div>
+    </div>
+  </div>
+
+  <div class="day-block">
+    <div class="day-title day-sun">SUNDAY · MAY 21 — SEMIFINALS & FINALS</div>
+    <div class="matches-grid">
+
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Morijo mix girls</span><span class="match-vs">vs</span><span class="match-team-away">Luxury FC</span></div><div class="match-footer"><span class="match-type">🏆 WOMEN FINAL</span></div></div>
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Winner QF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner QF2</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div>
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winner QF3</span><span class="match-vs">vs</span><span class="match-team-away">Winner QF4</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div>
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 MEN FINAL</span></div></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===== VOLLEYBALL ===== -->
+<div id="volleyball" class="section">
+<div class="page">
+  <div class="section-title">🏐 VOLLEYBALL</div>
+
+  <div class="info-card">
+    <strong>TOURNAMENT FORMAT</strong><br>
+    <strong>Men:</strong> 9 teams in 2 groups (A=5, B=4). Top 2 from each group advance. Semi-finals Sunday morning, Finals Sunday afternoon (not overlapping with football).<br>
+    <strong>Women:</strong> 6 teams in 2 groups of 3. Top 2 advance. Semi-finals Sunday morning, Finals Sunday afternoon. All women's matches on Court 3.<br>
+    All men's matches on Court 1 & Court 2.
+  </div>
+
+  <div class="section-title" style="font-size:1.2rem;margin-top:32px">MEN&#39;S GROUPS</div>
+  <div class="groups-grid">
+
+<div class="group-card"><div class="group-header"><span class="group-label">GROUP A</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Momida</span></div>
+<div class="group-team"><div class="team-num">2</div><span>Angata</span></div>
+<div class="group-team"><div class="team-num">3</div><span>Marti</span></div>
+<div class="group-team"><div class="team-num">4</div><span>Barsalo</span></div>
+<div class="group-team"><div class="team-num">5</div><span>Morijo Mix Boys</span></div></div></div>
+<div class="group-card"><div class="group-header"><span class="group-label">GROUP B</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Veterans</span></div>
+<div class="group-team"><div class="team-num">2</div><span>Poro Venom</span></div>
+<div class="group-team"><div class="team-num">3</div><span>Pentagon</span></div>
+<div class="group-team"><div class="team-num">4</div><span>Nkorika</span></div></div></div>
+  </div>
+
+  <div class="section-title" style="font-size:1.2rem;margin-top:32px">WOMEN&#39;S GROUPS</div>
+  <div class="groups-grid">
+
+<div class="group-card"><div class="group-header"><span class="group-label">GROUP A</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Barsaloi Roses</span></div>
+<div class="group-team"><div class="team-num">2</div><span>Pentagon Ladies</span></div>
+<div class="group-team"><div class="team-num">3</div><span>Miami Angels</span></div></div></div>
+<div class="group-card"><div class="group-header"><span class="group-label">GROUP B</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Morijo Girls</span></div>
+<div class="group-team"><div class="team-num">2</div><span>Samburu Queens</span></div>
+<div class="group-team"><div class="team-num">3</div><span>Nkorika Starlets</span></div></div></div>
+  </div>
+
+  <div class="section-title" style="font-size:1.2rem;margin-top:32px">MEN&#39;S SCHEDULE</div>
+
+  <div class="day-block">
+    <div class="day-title day-fri">FRIDAY · MAY 19 — GROUP STAGE</div>
+    <div class="matches-grid">
+
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Barsalo</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Barsalo</span></div><div class="match-footer"><span class="match-type">GRP A · R4</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R5</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R6</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Barsalo</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R7</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Angata</span></div><div class="match-footer"><span class="match-type">GRP A · R8</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Marti</span></div><div class="match-footer"><span class="match-type">GRP A · R9</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Pentagon</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP A · R10</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Barsalo</span></div><div class="match-footer"><span class="match-type">GRP B · R11</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Poro Venom</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP B · R12</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP B · R13</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Poro Venom</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP B · R14</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Marti</span></div><div class="match-footer"><span class="match-type">GRP B · R15</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Poro Venom</span></div><div class="match-footer"><span class="match-type">GRP B · R16</span></div></div>
+    </div>
+  </div>
+
+  <div class="day-block">
+    <div class="day-title day-sun">SUNDAY · MAY 21 — SEMIFINALS & FINALS</div>
+    <div class="matches-grid">
+
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div>
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div>
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 FINAL</span></div></div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:1.2rem;margin-top:32px">WOMEN&#39;S SCHEDULE</div>
+
+  <div class="day-block">
+    <div class="day-title day-fri">FRIDAY · MAY 19 — GROUP STAGE</div>
+    <div class="matches-grid">
+
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Barsaloi Roses</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon Ladies</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Barsaloi Roses</span><span class="match-vs">vs</span><span class="match-team-away">Miami Angels</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Pentagon Ladies</span><span class="match-vs">vs</span><span class="match-team-away">Miami Angels</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Morijo Girls</span><span class="match-vs">vs</span><span class="match-team-away">Samburu Queens</span></div><div class="match-footer"><span class="match-type">GRP B · R1</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Morijo Girls</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika Starlets</span></div><div class="match-footer"><span class="match-type">GRP B · R2</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Samburu Queens</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika Starlets</span></div><div class="match-footer"><span class="match-type">GRP B · R3</span></div></div>
+    </div>
+  </div>
+
+  <div class="day-block">
+    <div class="day-title day-sun">SUNDAY · MAY 21 — SEMIFINALS & FINALS</div>
+    <div class="matches-grid">
+
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div>
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div>
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 FINAL</span></div></div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===== CHESS ===== -->
+<div id="chess" class="section">
+<div class="page">
+  <div class="section-title">♞ CHESS</div>
+  <div class="info-card" style="text-align:center;padding:40px 20px">
+    <div style="font-size:3rem;margin-bottom:16px">♞</div>
+    <strong style="font-size:1.2rem;color:var(--text)">PROGRAM COMING SOON</strong><br><br>
+    The detailed chess match schedule will be published on <strong>May 18, 2026</strong> — the day before the tournament begins.<br><br>
+    Check back here for pairings, boards, and round times.
+  </div>
+</div>
+</div>
+
+<!-- ===== ATHLETICS ===== -->
+<div id="athletics" class="section">
+<div class="page">
+  <div class="section-title">🏃 ATHLETICS</div>
+  <div class="info-card">
+    <strong>COMPETITION DAYS</strong><br>
+    Track & Field events take place on <strong>Saturday, May 20</strong> (heats & qualifying) and <strong>Sunday, May 21</strong> (finals).
+  </div>
+
+  <div class="day-block">
+    <div class="day-title day-sat">SATURDAY · MAY 20 — HEATS & QUALIFYING</div>
+    <div class="matches-grid">
+
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">100m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">200m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">400m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">12:00</span><span class="match-field">FIELD</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Long Jump & Shot Put — Qualifying</span></div><div class="match-footer"><span class="match-type">ATH · QUAL</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">3000m Middle Distance — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">4x400m Relay — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
+    </div>
+  </div>
+
+  <div class="day-block">
+    <div class="day-title day-sun">SUNDAY · MAY 21 — FINALS</div>
+    <div class="matches-grid">
+
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">09:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">100m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">200m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">10:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">400m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">3000m Middle Distance — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">11:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">4x400m Relay — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">12:00</span><span class="match-field">FIELD</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Long Jump · Shot Put · High Jump — FINALS</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">12:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Cross Country — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===== MUSIC ===== -->
+<div id="music" class="section">
+<div class="page">
+  <div class="section-title">🎵 MUSIC</div>
+  <div class="info-card">
+    <strong>FORMAT</strong><br>
+    Choir qualifications and exhibition performances on Friday and Saturday evenings.<br>
+    Finals take place Sunday afternoon before the Closing Ceremony.
+  </div>
+
+  <div class="music-stage">
+    <div class="music-stage-header">🎤 FRIDAY · MAY 19 — STAGE</div>
+    <div class="music-item"><span class="music-time">18:00</span><span class="music-badge">QUAL</span><span class="music-content">Choir Qualifications — Round 1</span></div>
+    <div class="music-item"><span class="music-time">19:30</span><span class="music-badge">EXHIB</span><span class="music-content">Exhibition Performances</span></div>
+  </div>
+
+  <div class="music-stage">
+    <div class="music-stage-header">🎤 SATURDAY · MAY 20 — STAGE</div>
+    <div class="music-item"><span class="music-time">18:00</span><span class="music-badge">QUAL</span><span class="music-content">Choir Qualifications — Round 2</span></div>
+    <div class="music-item"><span class="music-time">19:30</span><span class="music-badge">EXHIB</span><span class="music-content">Exhibition Performances</span></div>
+  </div>
+
+  <div class="music-stage">
+    <div class="music-stage-header">🏆 SUNDAY · MAY 21 — STAGE</div>
+    <div class="music-item"><span class="music-time">16:00</span><span class="music-badge">FINAL</span><span class="music-content">Choir Finals — Before Closing Ceremony</span></div>
+    <div class="music-item"><span class="music-time">17:00</span><span class="music-badge">CLOSING</span><span class="music-content">Awards Ceremony — All Champions & Closing</span></div>
+  </div>
+</div>
+</div>
+
+<script>
+function activateNav(el){
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  const href=el.getAttribute('href').substring(1);
+  const target=document.getElementById(href);
+  if(target){ target.classList.add('active'); window.scrollTo({top:0,behavior:'smooth'}); }
+}
+function openAdmin(){ document.getElementById('adminModal').classList.add('active'); }
+function closeAdmin(){ document.getElementById('adminModal').classList.remove('active'); document.getElementById('adminError').style.display='none'; }
+function doLogin(){
+  const u=document.getElementById('adminUser').value;
+  const p=document.getElementById('adminPass').value;
+  if(u==='admin'&&p==='admin'){
+    document.getElementById('adminLoginForm').style.display='none';
+    document.getElementById('adminPanel').classList.add('active');
+    document.getElementById('adminModalTitle').textContent='🔐 ADMIN PANEL';
+    renderAdminMatches();
+  } else {
+    document.getElementById('adminError').style.display='block';
+  }
+}
+function doLogout(){
+  document.getElementById('adminLoginForm').style.display='block';
+  document.getElementById('adminPanel').classList.remove('active');
+  document.getElementById('adminModalTitle').textContent='🔐 ADMIN LOGIN';
+  document.getElementById('adminUser').value='';
+  document.getElementById('adminPass').value='';
+}
+function showAdminTab(tab,btn){
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('adminFootballTab').style.display=tab==='football'?'block':'none';
+  document.getElementById('adminVolleyballTab').style.display=tab==='volleyball'?'block':'none';
+}
+function renderAdminMatches(){
+  const fb=document.getElementById('adminFootballTab');
+  const vb=document.getElementById('adminVolleyballTab');
+  fb.innerHTML='<div style="color:var(--muted);font-size:.85rem;margin-bottom:12px">Click any match to edit scores (demo only)</div>';
+  const matches=[
+    {t:"09:00 · FIELD 1",h:"Morijo mix girls",a:"Luxury FC",id:"wf"},
+    {t:"10:00 · FIELD 1",h:"Winner QF1",a:"Winner QF2",id:"sf1"},
+    {t:"10:00 · FIELD 2",h:"Winner QF3",a:"Winner QF4",id:"sf2"},
+    {t:"15:00 · FIELD 2",h:"Winner SF1",a:"Winner SF2",id:"mf"}
+  ];
+  matches.forEach(m=>{
+    fb.innerHTML+='<div class="admin-match-item"><div class="admin-match-title">'+m.t+'</div><div class="admin-score-inputs"><input type="number" id="s_'+m.id+'_h" placeholder="0"><span style="color:var(--muted)">:</span><input type="number" id="s_'+m.id+'_a" placeholder="0"><button class="admin-save-btn" onclick="saveScore(''+m.id+'')">SAVE</button></div></div>';
+  });
+  vb.innerHTML='<div style="color:var(--muted);font-size:.85rem;margin-bottom:12px">Click any match to edit scores (demo only)</div>';
+  const vmatches=[
+    {t:"08:00 · COURT 1",h:"1st Group A",a:"2nd Group B",id:"vsf1"},
+    {t:"08:00 · COURT 2",h:"1st Group B",a:"2nd Group A",id:"vsf2"},
+    {t:"16:00 · COURT 1",h:"Winner SF1",a:"Winner SF2",id:"vf"}
+  ];
+  vmatches.forEach(m=>{
+    vb.innerHTML+='<div class="admin-match-item"><div class="admin-match-title">'+m.t+'</div><div class="admin-score-inputs"><input type="number" id="s_'+m.id+'_h" placeholder="0"><span style="color:var(--muted)">:</span><input type="number" id="s_'+m.id+'_a" placeholder="0"><button class="admin-save-btn" onclick="saveScore(''+m.id+'')">SAVE</button></div></div>';
+  });
+}
+function saveScore(id){
+  const h=document.getElementById('s_'+id+'_h').value;
+  const a=document.getElementById('s_'+id+'_a').value;
+  alert('Score saved: '+h+' - '+a);
+}
+</script>
 </body>
 </html>
