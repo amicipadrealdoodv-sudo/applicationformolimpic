@@ -43,9 +43,6 @@ nav { background:rgba(7,7,10,0.85); border-bottom:1px solid var(--border); posit
 .nav-link.active { color:var(--gold); border-bottom-color:var(--gold); }
 .section { display:none; animation:fadeIn .4s ease; }
 .section.active { display:block; }
-#schedule { display:block; }
-#football:target ~ #schedule, #volleyball:target ~ #schedule, #chess:target ~ #schedule, #athletics:target ~ #schedule, #music:target ~ #schedule { display:none; }
-#football:target, #volleyball:target, #chess:target, #athletics:target, #music:target { display:block; }
 @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
 .page { max-width:1400px; margin:0 auto; padding:32px; }
 .section-title { font-family:'Space Grotesk',sans-serif; font-size:1.6rem; font-weight:700; color:var(--text); margin-bottom:24px; letter-spacing:1px; display:flex; align-items:center; gap:12px; }
@@ -72,6 +69,7 @@ nav { background:rgba(7,7,10,0.85); border-bottom:1px solid var(--border); posit
 .match-vs { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1rem; color:var(--gold); padding:0 8px; flex-shrink:0; }
 .match-footer { display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:10px; margin-top:4px; }
 .match-type { font-size:.75rem; color:var(--muted); font-weight:600; letter-spacing:1px; }
+.match-score { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.1rem; color:var(--green); background:rgba(0,208,132,0.1); padding:4px 12px; border-radius:6px; }
 .groups-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:20px; margin-bottom:32px; }
 .group-card { background:var(--surface-2); border:1px solid var(--border); border-radius:16px; overflow:hidden; transition:all .3s ease; }
 .group-card:hover { transform:translateY(-4px); box-shadow:0 16px 48px rgba(0,0,0,0.4); border-color:var(--border-strong); }
@@ -82,18 +80,18 @@ nav { background:rgba(7,7,10,0.85); border-bottom:1px solid var(--border); posit
 .group-team:last-child { border-bottom:none; }
 .group-team:hover { background:var(--surface-3); border-radius:8px; }
 .team-num { width:28px; height:28px; border-radius:50%; background:var(--surface-3); display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.8rem; color:var(--text); border:1px solid var(--border); }
-.sport-athletes { background:var(--surface-2); border:1px solid var(--border); border-radius:16px; overflow:hidden; margin-bottom:20px; }
-.sport-athletes-header { padding:16px 20px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1rem; letter-spacing:1px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
-.athletes-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:0; }
-.athlete-item { padding:12px 16px; border-bottom:1px solid var(--border); font-size:.85rem; color:var(--text); display:flex; align-items:center; gap:10px; transition:background .2s ease; }
-.athlete-item:hover { background:var(--surface-3); }
-.athlete-item:last-child { border-bottom:none; }
-.athlete-num { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.75rem; color:var(--muted); min-width:24px; }
-.relay-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; padding:20px; }
-.relay-card { background:var(--surface-3); border:1px solid var(--border); border-radius:12px; padding:16px; transition:all .3s ease; }
-.relay-card:hover { border-color:var(--gold); transform:translateY(-2px); }
-.relay-card-title { font-family:'Space Grotesk',sans-serif; font-weight:700; color:var(--gold); margin-bottom:10px; font-size:.95rem; }
-.relay-card-body { font-size:.85rem; color:var(--muted); line-height:1.8; }
+.standings-section { margin-bottom:32px; }
+.standings-title { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.1rem; color:var(--text); margin-bottom:16px; letter-spacing:1px; display:flex; align-items:center; gap:10px; }
+.standings-title::before { content:''; width:4px; height:20px; background:var(--green); border-radius:2px; }
+.standings-table-wrap { background:var(--surface-2); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+.standings-table { width:100%; border-collapse:collapse; font-size:.85rem; }
+.standings-table th { background:var(--surface-3); padding:12px 10px; text-align:center; color:var(--gold); font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:1px; font-size:.75rem; text-transform:uppercase; }
+.standings-table td { padding:10px; border-bottom:1px solid var(--border); text-align:center; color:var(--text); }
+.standings-table tr:last-child td { border-bottom:none; }
+.standings-table tr:hover { background:var(--surface-3); }
+.standings-table .team-name { text-align:left; font-weight:600; }
+.standings-table .pos-col { width:36px; font-weight:700; color:var(--gold); }
+.standings-table .pts-col { font-weight:700; color:var(--green); font-size:1rem; }
 .music-stage { background:var(--surface-2); border:1px solid var(--border); border-radius:16px; padding:24px; margin-bottom:20px; }
 .music-stage-header { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.1rem; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; color:var(--teal); }
 .music-item { display:flex; align-items:center; gap:16px; padding:14px 0; border-bottom:1px solid var(--border); }
@@ -108,7 +106,7 @@ nav { background:rgba(7,7,10,0.85); border-bottom:1px solid var(--border); posit
 .admin-btn:hover { transform:translateY(-2px); box-shadow:0 8px 30px rgba(229,184,11,0.4); }
 .admin-modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.7); z-index:1000; justify-content:center; align-items:center; backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); }
 .admin-modal-overlay.active { display:flex; animation:fadeIn .3s ease; }
-.admin-modal { background:var(--surface); border:1px solid var(--border-strong); border-radius:20px; width:90%; max-width:520px; max-height:90vh; overflow-y:auto; box-shadow:0 40px 80px rgba(0,0,0,.6); }
+.admin-modal { background:var(--surface); border:1px solid var(--border-strong); border-radius:20px; width:90%; max-width:600px; max-height:90vh; overflow-y:auto; box-shadow:0 40px 80px rgba(0,0,0,.6); }
 .admin-modal-header { background:var(--surface-2); padding:20px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
 .admin-modal-header h3 { font-family:'Space Grotesk',sans-serif; font-size:1.2rem; font-weight:700; color:var(--text); letter-spacing:1px; }
 .admin-close { background:none; border:none; color:var(--muted); font-size:1.8rem; cursor:pointer; width:36px; height:36px; display:flex; align-items:center; justify-content:center; border-radius:50%; transition:all .2s ease; }
@@ -126,10 +124,10 @@ nav { background:rgba(7,7,10,0.85); border-bottom:1px solid var(--border); posit
 .admin-match-item { background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:12px; transition:all .3s ease; }
 .admin-match-item:hover { border-color:var(--border-strong); }
 .admin-match-title { font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.85rem; color:var(--text); margin-bottom:10px; }
-.admin-score-inputs { display:flex; gap:10px; align-items:center; }
+.admin-score-inputs { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
 .admin-score-inputs input { width:64px; padding:10px; text-align:center; border:1px solid var(--border); border-radius:8px; background:var(--surface-3); color:var(--text); font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1rem; transition:all .3s ease; }
 .admin-score-inputs input:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(229,184,11,0.15); outline:none; }
-.admin-save-btn { background:var(--green); color:#07070a; border:none; padding:8px 16px; border-radius:8px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.8rem; cursor:pointer; margin-left:auto; transition:all .3s ease; }
+.admin-save-btn { background:var(--green); color:#07070a; border:none; padding:8px 16px; border-radius:8px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.8rem; cursor:pointer; transition:all .3s ease; }
 .admin-save-btn:hover { background:#00b873; transform:translateY(-1px); }
 .admin-logout-btn { background:var(--red); color:#fff; border:none; padding:8px 16px; border-radius:8px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:.8rem; cursor:pointer; transition:all .3s ease; }
 .admin-logout-btn:hover { background:#dc2626; transform:translateY(-1px); }
@@ -149,16 +147,13 @@ nav { background:rgba(7,7,10,0.85); border-bottom:1px solid var(--border); posit
   .matches-grid { grid-template-columns:1fr; }
   .groups-grid { grid-template-columns:1fr; }
   .nav-link { padding:12px 14px; font-size:.8rem; }
-  .relay-grid { grid-template-columns:1fr; padding:12px; }
-  .athletes-grid { grid-template-columns:1fr; }
+  .standings-table { font-size:.75rem; }
+  .standings-table th, .standings-table td { padding:8px 4px; }
 }
 ::-webkit-scrollbar { width:8px; height:8px; }
 ::-webkit-scrollbar-track { background:var(--bg); }
 ::-webkit-scrollbar-thumb { background:var(--surface-3); border-radius:4px; }
 ::-webkit-scrollbar-thumb:hover { background:var(--border-strong); }
-.gender-badge { font-size:.65rem; font-weight:700; padding:2px 8px; border-radius:4px; margin-left:6px; text-transform:uppercase; letter-spacing:1px; }
-.gender-m { background:rgba(59,130,246,0.15); color:var(--blue); border:1px solid rgba(59,130,246,0.3); }
-.gender-f { background:rgba(239,68,68,0.15); color:var(--red); border:1px solid rgba(239,68,68,0.3); }
 </style>
 </head>
 <body>
@@ -221,15 +216,14 @@ nav { background:rgba(7,7,10,0.85); border-bottom:1px solid var(--border); posit
 
 <nav>
   <div class="nav-inner">
-    <a href="#schedule" class="nav-link active" onclick="activateNav(this)">📋 FULL SCHEDULE</a>
-    <a href="#football" class="nav-link" onclick="activateNav(this)">⚽ FOOTBALL</a>
-    <a href="#volleyball" class="nav-link" onclick="activateNav(this)">🏐 VOLLEYBALL</a>
-    <a href="#chess" class="nav-link" onclick="activateNav(this)">♞ CHESS</a>
-    <a href="#athletics" class="nav-link" onclick="activateNav(this)">🏃 ATHLETICS</a>
-    <a href="#music" class="nav-link" onclick="activateNav(this)">🎵 MUSIC</a>
+    <a href="#" class="nav-link active" onclick="activateNav(this,'schedule')">📋 FULL SCHEDULE</a>
+    <a href="#" class="nav-link" onclick="activateNav(this,'football')">⚽ FOOTBALL</a>
+    <a href="#" class="nav-link" onclick="activateNav(this,'volleyball')">🏐 VOLLEYBALL</a>
+    <a href="#" class="nav-link" onclick="activateNav(this,'chess')">♞ CHESS</a>
+    <a href="#" class="nav-link" onclick="activateNav(this,'athletics')">🏃 ATHLETICS</a>
+    <a href="#" class="nav-link" onclick="activateNav(this,'music')">🎵 MUSIC</a>
   </div>
 </nav>
-
 <!-- ===== SCHEDULE ===== -->
 <div id="schedule" class="section active">
 <div class="page">
@@ -238,207 +232,80 @@ nav { background:rgba(7,7,10,0.85); border-bottom:1px solid var(--border); posit
   <!-- FRIDAY -->
   <div class="day-block">
     <div class="day-title day-fri">⬛ FRIDAY · MAY 19</div>
-
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--green)"></span>FOOTBALL MEN — GROUP STAGE — Field 1 & Field 2</div>
     <div class="matches-grid">
-
-<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Mara Virion</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Barsaloi</span></div><div class="match-footer"><span class="match-type">GRP B · R1</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winterfell</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R2</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP C · R1</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Luly</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R2</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Veterans</span></div><div class="match-footer"><span class="match-type">GRP D · R1</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Pentagon</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R2</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Momida</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Mara Virion</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R4</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Winterfell</span></div><div class="match-footer"><span class="match-type">GRP B · R3</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Barsaloi</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R4</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Luly</span></div><div class="match-footer"><span class="match-type">GRP C · R3</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Nkorika</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R4</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP D · R3</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R4</span></div></div>
-    </div>
-
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Mara Virion</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Barsaloii</span></div><div class="match-footer"><span class="match-type">GRP B · R1</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winterfell</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R2</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP C · R1</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Luly</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R2</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Veterans</span></div><div class="match-footer"><span class="match-type">GRP D · R1</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Pentagon</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R2</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Momida</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Mara Virion</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R4</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Winterfell</span></div><div class="match-footer"><span class="match-type">GRP B · R3</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Barsaloii</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R4</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Luly</span></div><div class="match-footer"><span class="match-type">GRP C · R3</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Nkorika</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R4</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP D · R3</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R4</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--purple)"></span>VOLLEYBALL MEN — GROUP STAGE — Court 1 & Court 2</div>
     <div class="matches-grid">
-
-<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Barsalo</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Barsalo</span></div><div class="match-footer"><span class="match-type">GRP A · R4</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R5</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R6</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Barsalo</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R7</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Angata</span></div><div class="match-footer"><span class="match-type">GRP A · R8</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Marti</span></div><div class="match-footer"><span class="match-type">GRP A · R9</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Pentagon</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP A · R10</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Barsalo</span></div><div class="match-footer"><span class="match-type">GRP B · R11</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Poro Venom</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP B · R12</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP B · R13</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Poro Venom</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP B · R14</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Marti</span></div><div class="match-footer"><span class="match-type">GRP B · R15</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Poro Venom</span></div><div class="match-footer"><span class="match-type">GRP B · R16</span></div></div>
-    </div>
-
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Barsaloi</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Barsaloi</span></div><div class="match-footer"><span class="match-type">GRP A · R4</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R5</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R6</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Barsaloi</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R7</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Angata</span></div><div class="match-footer"><span class="match-type">GRP A · R8</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Marti</span></div><div class="match-footer"><span class="match-type">GRP A · R9</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Pentagon</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP A · R10</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Barsaloi</span></div><div class="match-footer"><span class="match-type">GRP B · R11</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Poro Venom</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP B · R12</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP B · R13</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Poro Venom</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP B · R14</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Marti</span></div><div class="match-footer"><span class="match-type">GRP B · R15</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Poro Venom</span></div><div class="match-footer"><span class="match-type">GRP B · R16</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--purple)"></span>VOLLEYBALL WOMEN — GROUP STAGE — Court 3</div>
     <div class="matches-grid">
-
-<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Barsaloi Roses</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon Ladies</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Barsaloi Roses</span><span class="match-vs">vs</span><span class="match-team-away">Miami Angels</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Pentagon Ladies</span><span class="match-vs">vs</span><span class="match-team-away">Miami Angels</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Morijo Girls</span><span class="match-vs">vs</span><span class="match-team-away">Samburu Queens</span></div><div class="match-footer"><span class="match-type">GRP B · R1</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Morijo Girls</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika Starlets</span></div><div class="match-footer"><span class="match-type">GRP B · R2</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Samburu Queens</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika Starlets</span></div><div class="match-footer"><span class="match-type">GRP B · R3</span></div></div>
-    </div>
-
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Barsaloii Roses</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon Ladies</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Barsaloii Roses</span><span class="match-vs">vs</span><span class="match-team-away">Miami Angels</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Pentagon Ladies</span><span class="match-vs">vs</span><span class="match-team-away">Miami Angels</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Morijo Girls</span><span class="match-vs">vs</span><span class="match-team-away">Samburu Queens</span></div><div class="match-footer"><span class="match-type">GRP B · R1</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Morijo Girls</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika Starlets</span></div><div class="match-footer"><span class="match-type">GRP B · R2</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Samburu Queens</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika Starlets</span></div><div class="match-footer"><span class="match-type">GRP B · R3</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--teal)"></span>MUSIC — QUALIFICATIONS & EXHIBITIONS</div>
     <div class="matches-grid">
-
-<div class="match-card "><div class="match-card-header"><span class="match-time">18:00</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Choir Qualifications — Round 1</span></div><div class="match-footer"><span class="match-type">MUS · QUAL</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">19:30</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Exhibition Performances</span></div><div class="match-footer"><span class="match-type">MUS · EXHIB</span></div></div>
-    </div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">18:00</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Choir Qualifications — Round 1</span></div><div class="match-footer"><span class="match-type">MUS · QUAL</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">19:30</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Exhibition Performances</span></div><div class="match-footer"><span class="match-type">MUS · EXHIB</span></div></div>    </div>
   </div>
-
   <!-- SATURDAY -->
   <div class="day-block">
     <div class="day-title day-sat">⬛ SATURDAY · MAY 20</div>
-
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--green)"></span>FOOTBALL MEN — GROUP STAGE — Field 1 & Field 2</div>
     <div class="matches-grid">
-
-<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R5</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Mara Virion</span><span class="match-vs">vs</span><span class="match-team-away">Momida</span></div><div class="match-footer"><span class="match-type">GRP A · R6</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R5</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Barsaloi</span><span class="match-vs">vs</span><span class="match-team-away">Winterfell</span></div><div class="match-footer"><span class="match-type">GRP B · R6</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R5</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Nkorika</span><span class="match-vs">vs</span><span class="match-team-away">Luly</span></div><div class="match-footer"><span class="match-type">GRP C · R6</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R5</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP D · R6</span></div></div>
-    </div>
-
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R5</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Mara Virion</span><span class="match-vs">vs</span><span class="match-team-away">Momida</span></div><div class="match-footer"><span class="match-type">GRP A · R6</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R5</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Barsaloii</span><span class="match-vs">vs</span><span class="match-team-away">Winterfell</span></div><div class="match-footer"><span class="match-type">GRP B · R6</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R5</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Nkorika</span><span class="match-vs">vs</span><span class="match-team-away">Luly</span></div><div class="match-footer"><span class="match-type">GRP C · R6</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R5</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP D · R6</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--green)"></span>FOOTBALL MEN — QUARTER-FINALS — Field 1 & Field 2</div>
     <div class="matches-grid">
-
-<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">QF 1</span></div></div>
-<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">1st Group C</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group D</span></div><div class="match-footer"><span class="match-type">QF 2</span></div></div>
-<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">QF 3</span></div></div>
-<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">1st Group D</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group C</span></div><div class="match-footer"><span class="match-type">QF 4</span></div></div>
-    </div>
-
+<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">QF 1</span></div></div><div class="match-card qf-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">1st Group C</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group D</span></div><div class="match-footer"><span class="match-type">QF 2</span></div></div><div class="match-card qf-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">QF 3</span></div></div><div class="match-card qf-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">1st Group D</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group C</span></div><div class="match-footer"><span class="match-type">QF 4</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--red)"></span>ATHLETICS — TRACK & FIELD</div>
     <div class="matches-grid">
-
-<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">100m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">200m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">400m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">12:00</span><span class="match-field">FIELD</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Long Jump & Shot Put — Qualifying</span></div><div class="match-footer"><span class="match-type">ATH · QUAL</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">3000m Middle Distance — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">4x400m Relay — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
-    </div>
-
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">100m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">200m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">400m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">12:00</span><span class="match-field">FIELD</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Long Jump & Shot Put — Qualifying</span></div><div class="match-footer"><span class="match-type">ATH · QUAL</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">3000m Middle Distance — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">4x400m Relay — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--teal)"></span>MUSIC — QUALIFICATIONS & EXHIBITIONS</div>
     <div class="matches-grid">
-
-<div class="match-card "><div class="match-card-header"><span class="match-time">18:00</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Choir Qualifications — Round 2</span></div><div class="match-footer"><span class="match-type">MUS · QUAL</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">19:30</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Exhibition Performances</span></div><div class="match-footer"><span class="match-type">MUS · EXHIB</span></div></div>
-    </div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">18:00</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Choir Qualifications — Round 2</span></div><div class="match-footer"><span class="match-type">MUS · QUAL</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">19:30</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Exhibition Performances</span></div><div class="match-footer"><span class="match-type">MUS · EXHIB</span></div></div>    </div>
   </div>
-
   <!-- SUNDAY — FINALS DAY -->
   <div class="day-block">
     <div class="day-title day-sun">⬛ SUNDAY · MAY 21 — FINALS DAY</div>
-
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--purple)"></span>VOLLEYBALL MEN — SEMIFINALS — Court 1 & Court 2</div>
     <div class="matches-grid">
-
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div>
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div>
-    </div>
-
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div><div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--purple)"></span>VOLLEYBALL WOMEN — SEMIFINALS — Court 3</div>
     <div class="matches-grid">
-
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div>
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div>
-    </div>
-
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div><div class="match-card semi-s"><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--green)"></span>FOOTBALL WOMEN — FINAL — Field 1</div>
     <div class="matches-grid">
-
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Morijo mix girls</span><span class="match-vs">vs</span><span class="match-team-away">Luxury FC</span></div><div class="match-footer"><span class="match-type">🏆 WOMEN FINAL</span></div></div>
-    </div>
-
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Morijo mix girls</span><span class="match-vs">vs</span><span class="match-team-away">Luxury FC</span></div><div class="match-footer"><span class="match-type">🏆 WOMEN FINAL</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--green)"></span>FOOTBALL MEN — SEMIFINALS — Field 1 & Field 2</div>
     <div class="matches-grid">
-
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Winner QF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner QF2</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div>
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winner QF3</span><span class="match-vs">vs</span><span class="match-team-away">Winner QF4</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div>
-    </div>
-
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Winner QF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner QF2</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div><div class="match-card semi-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winner QF3</span><span class="match-vs">vs</span><span class="match-team-away">Winner QF4</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--red)"></span>ATHLETICS — FINALS</div>
     <div class="matches-grid">
-
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">09:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">100m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">200m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">10:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">400m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">3000m Middle Distance — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">11:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">4x400m Relay — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">12:00</span><span class="match-field">FIELD</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Long Jump · Shot Put · High Jump — FINALS</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">12:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Cross Country — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
-    </div>
-
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">09:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">100m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div><div class="match-card final-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">200m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div><div class="match-card final-s"><div class="match-card-header"><span class="match-time">10:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">400m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div><div class="match-card final-s"><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">3000m Middle Distance — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div><div class="match-card final-s"><div class="match-card-header"><span class="match-time">11:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">4x400m Relay — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div><div class="match-card final-s"><div class="match-card-header"><span class="match-time">12:00</span><span class="match-field">FIELD</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Long Jump · Shot Put · High Jump — FINALS</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div><div class="match-card final-s"><div class="match-card-header"><span class="match-time">12:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Cross Country — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--green)"></span>FOOTBALL MEN — 3RD PLACE — Field 1</div>
     <div class="matches-grid">
-
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div>
-    </div>
-
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--purple)"></span>VOLLEYBALL MEN — 3RD PLACE — Court 1</div>
     <div class="matches-grid">
-
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div>
-    </div>
-
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--purple)"></span>VOLLEYBALL WOMEN — 3RD PLACE — Court 3</div>
     <div class="matches-grid">
-
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div>
-    </div>
-
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--green)"></span>FOOTBALL MEN — FINAL — Field 2</div>
     <div class="matches-grid">
-
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 FINAL</span></div></div>
-    </div>
-
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 FINAL</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--purple)"></span>VOLLEYBALL MEN — FINAL — Court 1</div>
     <div class="matches-grid">
-
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 FINAL</span></div></div>
-    </div>
-
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 FINAL</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--purple)"></span>VOLLEYBALL WOMEN — FINAL — Court 3</div>
     <div class="matches-grid">
-
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 FINAL</span></div></div>
-    </div>
-
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 FINAL</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--teal)"></span>MUSIC — FINALS</div>
     <div class="matches-grid">
-
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Choir Finals — Before Closing Ceremony</span></div><div class="match-footer"><span class="match-type">MUS · FINAL</span></div></div>
-    </div>
-
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Choir Finals — Before Closing Ceremony</span></div><div class="match-footer"><span class="match-type">MUS · FINAL</span></div></div>    </div>
     <div class="schedule-sport-header"><span class="sport-dot" style="background:var(--gold)"></span>CLOSING CEREMONY</div>
     <div class="matches-grid">
-
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">🏆 Awards Ceremony — All Champions & Closing</span></div><div class="match-footer"><span class="match-type">CLOSING</span></div></div>
-    </div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">STAGE</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">🏆 Awards Ceremony — All Champions & Closing</span></div><div class="match-footer"><span class="match-type">CLOSING</span></div></div>    </div>
   </div>
 </div>
 </div>
-
 <!-- ===== FOOTBALL ===== -->
 <div id="football" class="section">
 <div class="page">
@@ -453,84 +320,51 @@ nav { background:rgba(7,7,10,0.85); border-bottom:1px solid var(--border); posit
 
   <div class="section-title" style="font-size:1.2rem;margin-top:32px">MEN&#39;S GROUPS</div>
   <div class="groups-grid">
-
 <div class="group-card"><div class="group-header"><span class="group-label">GROUP A</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Green Boys Army</span></div>
 <div class="group-team"><div class="team-num">2</div><span>Mara Virion</span></div>
 <div class="group-team"><div class="team-num">3</div><span>Momida</span></div>
-<div class="group-team"><div class="team-num">4</div><span>Morijo Soccer</span></div></div></div>
-<div class="group-card"><div class="group-header"><span class="group-label">GROUP B</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Nkurkur (GSU)</span></div>
-<div class="group-team"><div class="team-num">2</div><span>Barsaloi</span></div>
+<div class="group-team"><div class="team-num">4</div><span>Morijo Soccer</span></div></div></div><div class="group-card"><div class="group-header"><span class="group-label">GROUP B</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Nkurkur (GSU)</span></div>
+<div class="group-team"><div class="team-num">2</div><span>Barsaloii</span></div>
 <div class="group-team"><div class="team-num">3</div><span>Winterfell</span></div>
-<div class="group-team"><div class="team-num">4</div><span>Mini Majors</span></div></div></div>
-<div class="group-card"><div class="group-header"><span class="group-label">GROUP C</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Miami</span></div>
+<div class="group-team"><div class="team-num">4</div><span>Mini Majors</span></div></div></div><div class="group-card"><div class="group-header"><span class="group-label">GROUP C</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Miami</span></div>
 <div class="group-team"><div class="team-num">2</div><span>Nkorika</span></div>
 <div class="group-team"><div class="team-num">3</div><span>Luly</span></div>
-<div class="group-team"><div class="team-num">4</div><span>Morijo senior original</span></div></div></div>
-<div class="group-card"><div class="group-header"><span class="group-label">GROUP D</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Marti</span></div>
+<div class="group-team"><div class="team-num">4</div><span>Morijo senior original</span></div></div></div><div class="group-card"><div class="group-header"><span class="group-label">GROUP D</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Marti</span></div>
 <div class="group-team"><div class="team-num">2</div><span>Veterans</span></div>
 <div class="group-team"><div class="team-num">3</div><span>Pentagon</span></div>
-<div class="group-team"><div class="team-num">4</div><span>Transmillam</span></div></div></div>
-  </div>
+<div class="group-team"><div class="team-num">4</div><span>Transmillam</span></div></div></div>  </div>
 
-  <div class="section-title" style="font-size:1.2rem;margin-top:32px">MEN&#39;S SCHEDULE</div>
-
+  <div class="section-title" style="font-size:1.2rem;margin-top:32px">MEN&#39;S STANDINGS</div>
+<div class="standings-section"><div class="standings-title">GROUP A</div><div class="standings-table-wrap"><table class="standings-table" id="stand-fb-A"><thead><tr><th class="pos-col">#</th><th>TEAM</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th class="pts-col">PTS</th></tr></thead><tbody><tr><td class="pos-col">1</td><td class="team-name">Green Boys Army</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">2</td><td class="team-name">Mara Virion</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">3</td><td class="team-name">Momida</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">4</td><td class="team-name">Morijo Soccer</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr></tbody></table></div></div><div class="standings-section"><div class="standings-title">GROUP B</div><div class="standings-table-wrap"><table class="standings-table" id="stand-fb-B"><thead><tr><th class="pos-col">#</th><th>TEAM</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th class="pts-col">PTS</th></tr></thead><tbody><tr><td class="pos-col">1</td><td class="team-name">Nkurkur (GSU)</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">2</td><td class="team-name">Barsaloii</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">3</td><td class="team-name">Winterfell</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">4</td><td class="team-name">Mini Majors</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr></tbody></table></div></div><div class="standings-section"><div class="standings-title">GROUP C</div><div class="standings-table-wrap"><table class="standings-table" id="stand-fb-C"><thead><tr><th class="pos-col">#</th><th>TEAM</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th class="pts-col">PTS</th></tr></thead><tbody><tr><td class="pos-col">1</td><td class="team-name">Miami</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">2</td><td class="team-name">Nkorika</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">3</td><td class="team-name">Luly</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">4</td><td class="team-name">Morijo senior original</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr></tbody></table></div></div><div class="standings-section"><div class="standings-title">GROUP D</div><div class="standings-table-wrap"><table class="standings-table" id="stand-fb-D"><thead><tr><th class="pos-col">#</th><th>TEAM</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th class="pts-col">PTS</th></tr></thead><tbody><tr><td class="pos-col">1</td><td class="team-name">Marti</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">2</td><td class="team-name">Veterans</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">3</td><td class="team-name">Pentagon</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">4</td><td class="team-name">Transmillam</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr></tbody></table></div></div>  <div class="section-title" style="font-size:1.2rem;margin-top:32px">MEN&#39;S SCHEDULE</div>
   <div class="day-block">
     <div class="day-title day-fri">FRIDAY · MAY 19 — GROUP STAGE</div>
     <div class="matches-grid">
-
-<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Mara Virion</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Barsaloi</span></div><div class="match-footer"><span class="match-type">GRP B · R1</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winterfell</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R2</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP C · R1</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Luly</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R2</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Veterans</span></div><div class="match-footer"><span class="match-type">GRP D · R1</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Pentagon</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R2</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Momida</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Mara Virion</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R4</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Winterfell</span></div><div class="match-footer"><span class="match-type">GRP B · R3</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Barsaloi</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R4</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Luly</span></div><div class="match-footer"><span class="match-type">GRP C · R3</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Nkorika</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R4</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP D · R3</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R4</span></div></div>
-    </div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Mara Virion</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Barsaloii</span></div><div class="match-footer"><span class="match-type">GRP B · R1</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winterfell</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R2</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP C · R1</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Luly</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R2</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Veterans</span></div><div class="match-footer"><span class="match-type">GRP D · R1</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Pentagon</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R2</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Momida</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Mara Virion</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R4</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Winterfell</span></div><div class="match-footer"><span class="match-type">GRP B · R3</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Barsaloii</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R4</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Luly</span></div><div class="match-footer"><span class="match-type">GRP C · R3</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Nkorika</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R4</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP D · R3</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R4</span></div></div>    </div>
   </div>
-
   <div class="day-block">
     <div class="day-title day-sat">SATURDAY · MAY 20 — GROUP STAGE & QUARTER-FINALS</div>
     <div class="matches-grid">
-
-<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R5</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Mara Virion</span><span class="match-vs">vs</span><span class="match-team-away">Momida</span></div><div class="match-footer"><span class="match-type">GRP A · R6</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R5</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Barsaloi</span><span class="match-vs">vs</span><span class="match-team-away">Winterfell</span></div><div class="match-footer"><span class="match-type">GRP B · R6</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R5</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Nkorika</span><span class="match-vs">vs</span><span class="match-team-away">Luly</span></div><div class="match-footer"><span class="match-type">GRP C · R6</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R5</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP D · R6</span></div></div>
-<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">QF 1</span></div></div>
-<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">1st Group C</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group D</span></div><div class="match-footer"><span class="match-type">QF 2</span></div></div>
-<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">QF 3</span></div></div>
-<div class="match-card qf-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">1st Group D</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group C</span></div><div class="match-footer"><span class="match-type">QF 4</span></div></div>
-    </div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Green Boys Army</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Soccer</span></div><div class="match-footer"><span class="match-type">GRP A · R5</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Mara Virion</span><span class="match-vs">vs</span><span class="match-team-away">Momida</span></div><div class="match-footer"><span class="match-type">GRP A · R6</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Nkurkur (GSU)</span><span class="match-vs">vs</span><span class="match-team-away">Mini Majors</span></div><div class="match-footer"><span class="match-type">GRP B · R5</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Barsaloii</span><span class="match-vs">vs</span><span class="match-team-away">Winterfell</span></div><div class="match-footer"><span class="match-type">GRP B · R6</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Miami</span><span class="match-vs">vs</span><span class="match-team-away">Morijo senior original</span></div><div class="match-footer"><span class="match-type">GRP C · R5</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Nkorika</span><span class="match-vs">vs</span><span class="match-team-away">Luly</span></div><div class="match-footer"><span class="match-type">GRP C · R6</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Transmillam</span></div><div class="match-footer"><span class="match-type">GRP D · R5</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP D · R6</span></div></div><div class="match-card qf-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">QF 1</span></div></div><div class="match-card qf-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">1st Group C</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group D</span></div><div class="match-footer"><span class="match-type">QF 2</span></div></div><div class="match-card qf-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">QF 3</span></div></div><div class="match-card qf-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">1st Group D</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group C</span></div><div class="match-footer"><span class="match-type">QF 4</span></div></div>    </div>
   </div>
-
   <div class="day-block">
     <div class="day-title day-sun">SUNDAY · MAY 21 — SEMIFINALS & FINALS</div>
     <div class="matches-grid">
-
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Morijo mix girls</span><span class="match-vs">vs</span><span class="match-team-away">Luxury FC</span></div><div class="match-footer"><span class="match-type">🏆 WOMEN FINAL</span></div></div>
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Winner QF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner QF2</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div>
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winner QF3</span><span class="match-vs">vs</span><span class="match-team-away">Winner QF4</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div>
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div>
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 MEN FINAL</span></div></div>
-    </div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Morijo mix girls</span><span class="match-vs">vs</span><span class="match-team-away">Luxury FC</span></div><div class="match-footer"><span class="match-type">🏆 WOMEN FINAL</span></div></div><div class="match-card semi-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Winner QF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner QF2</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div><div class="match-card semi-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winner QF3</span><span class="match-vs">vs</span><span class="match-team-away">Winner QF4</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div><div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">FIELD 1</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div><div class="match-card final-s"><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">FIELD 2</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 MEN FINAL</span></div></div>    </div>
   </div>
-
 </div>
 </div>
-
 <!-- ===== VOLLEYBALL ===== -->
 <div id="volleyball" class="section">
 <div class="page">
@@ -545,94 +379,60 @@ nav { background:rgba(7,7,10,0.85); border-bottom:1px solid var(--border); posit
 
   <div class="section-title" style="font-size:1.2rem;margin-top:32px">MEN&#39;S GROUPS</div>
   <div class="groups-grid">
-
 <div class="group-card"><div class="group-header"><span class="group-label">GROUP A</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Momida</span></div>
 <div class="group-team"><div class="team-num">2</div><span>Angata</span></div>
 <div class="group-team"><div class="team-num">3</div><span>Marti</span></div>
-<div class="group-team"><div class="team-num">4</div><span>Barsalo</span></div>
-<div class="group-team"><div class="team-num">5</div><span>Morijo Mix Boys</span></div></div></div>
-<div class="group-card"><div class="group-header"><span class="group-label">GROUP B</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Veterans</span></div>
+<div class="group-team"><div class="team-num">4</div><span>Barsaloi</span></div>
+<div class="group-team"><div class="team-num">5</div><span>Morijo Mix Boys</span></div></div></div><div class="group-card"><div class="group-header"><span class="group-label">GROUP B</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Veterans</span></div>
 <div class="group-team"><div class="team-num">2</div><span>Poro Venom</span></div>
 <div class="group-team"><div class="team-num">3</div><span>Pentagon</span></div>
-<div class="group-team"><div class="team-num">4</div><span>Nkorika</span></div></div></div>
-  </div>
+<div class="group-team"><div class="team-num">4</div><span>Nkorika</span></div></div></div>  </div>
 
-  <div class="section-title" style="font-size:1.2rem;margin-top:32px">WOMEN&#39;S GROUPS</div>
+  <div class="section-title" style="font-size:1.2rem;margin-top:32px">MEN&#39;S STANDINGS</div>
+<div class="standings-section"><div class="standings-title">GROUP A</div><div class="standings-table-wrap"><table class="standings-table" id="stand-vb-ma"><thead><tr><th class="pos-col">#</th><th>TEAM</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th class="pts-col">PTS</th></tr></thead><tbody><tr><td class="pos-col">1</td><td class="team-name">Momida</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">2</td><td class="team-name">Angata</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">3</td><td class="team-name">Marti</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">4</td><td class="team-name">Barsaloi</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">5</td><td class="team-name">Morijo Mix Boys</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr></tbody></table></div></div><div class="standings-section"><div class="standings-title">GROUP B</div><div class="standings-table-wrap"><table class="standings-table" id="stand-vb-mb"><thead><tr><th class="pos-col">#</th><th>TEAM</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th class="pts-col">PTS</th></tr></thead><tbody><tr><td class="pos-col">1</td><td class="team-name">Veterans</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">2</td><td class="team-name">Poro Venom</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">3</td><td class="team-name">Pentagon</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">4</td><td class="team-name">Nkorika</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr></tbody></table></div></div>  <div class="section-title" style="font-size:1.2rem;margin-top:32px">WOMEN&#39;S GROUPS</div>
   <div class="groups-grid">
-
-<div class="group-card"><div class="group-header"><span class="group-label">GROUP A</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Barsaloi Roses</span></div>
+<div class="group-card"><div class="group-header"><span class="group-label">GROUP A</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Barsaloii Roses</span></div>
 <div class="group-team"><div class="team-num">2</div><span>Pentagon Ladies</span></div>
-<div class="group-team"><div class="team-num">3</div><span>Miami Angels</span></div></div></div>
-<div class="group-card"><div class="group-header"><span class="group-label">GROUP B</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Morijo Girls</span></div>
+<div class="group-team"><div class="team-num">3</div><span>Miami Angels</span></div></div></div><div class="group-card"><div class="group-header"><span class="group-label">GROUP B</span></div><div class="group-teams"><div class="group-team"><div class="team-num">1</div><span>Morijo Girls</span></div>
 <div class="group-team"><div class="team-num">2</div><span>Samburu Queens</span></div>
-<div class="group-team"><div class="team-num">3</div><span>Nkorika Starlets</span></div></div></div>
-  </div>
+<div class="group-team"><div class="team-num">3</div><span>Nkorika Starlets</span></div></div></div>  </div>
 
-  <div class="section-title" style="font-size:1.2rem;margin-top:32px">MEN&#39;S SCHEDULE</div>
-
+  <div class="section-title" style="font-size:1.2rem;margin-top:32px">WOMEN&#39;S STANDINGS</div>
+<div class="standings-section"><div class="standings-title">GROUP A</div><div class="standings-table-wrap"><table class="standings-table" id="stand-vb-fa"><thead><tr><th class="pos-col">#</th><th>TEAM</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th class="pts-col">PTS</th></tr></thead><tbody><tr><td class="pos-col">1</td><td class="team-name">Barsaloii Roses</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">2</td><td class="team-name">Pentagon Ladies</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">3</td><td class="team-name">Miami Angels</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr></tbody></table></div></div><div class="standings-section"><div class="standings-title">GROUP B</div><div class="standings-table-wrap"><table class="standings-table" id="stand-vb-fb"><thead><tr><th class="pos-col">#</th><th>TEAM</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th class="pts-col">PTS</th></tr></thead><tbody><tr><td class="pos-col">1</td><td class="team-name">Morijo Girls</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">2</td><td class="team-name">Samburu Queens</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr>
+<tr><td class="pos-col">3</td><td class="team-name">Nkorika Starlets</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="pts-col">0</td></tr></tbody></table></div></div>  <div class="section-title" style="font-size:1.2rem;margin-top:32px">MEN&#39;S SCHEDULE</div>
   <div class="day-block">
     <div class="day-title day-fri">FRIDAY · MAY 19 — GROUP STAGE</div>
     <div class="matches-grid">
-
-<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Barsalo</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Barsalo</span></div><div class="match-footer"><span class="match-type">GRP A · R4</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R5</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R6</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Barsalo</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R7</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Angata</span></div><div class="match-footer"><span class="match-type">GRP A · R8</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Marti</span></div><div class="match-footer"><span class="match-type">GRP A · R9</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Pentagon</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP A · R10</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Barsalo</span></div><div class="match-footer"><span class="match-type">GRP B · R11</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Poro Venom</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP B · R12</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP B · R13</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Poro Venom</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP B · R14</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Marti</span></div><div class="match-footer"><span class="match-type">GRP B · R15</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Poro Venom</span></div><div class="match-footer"><span class="match-type">GRP B · R16</span></div></div>
-    </div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Barsaloi</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Barsaloi</span></div><div class="match-footer"><span class="match-type">GRP A · R4</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Marti</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R5</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R6</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Barsaloi</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP A · R7</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Angata</span></div><div class="match-footer"><span class="match-type">GRP A · R8</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Marti</span></div><div class="match-footer"><span class="match-type">GRP A · R9</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Pentagon</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP A · R10</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Barsaloi</span></div><div class="match-footer"><span class="match-type">GRP B · R11</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Poro Venom</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon</span></div><div class="match-footer"><span class="match-type">GRP B · R12</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Angata</span><span class="match-vs">vs</span><span class="match-team-away">Morijo Mix Boys</span></div><div class="match-footer"><span class="match-type">GRP B · R13</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Poro Venom</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika</span></div><div class="match-footer"><span class="match-type">GRP B · R14</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Momida</span><span class="match-vs">vs</span><span class="match-team-away">Marti</span></div><div class="match-footer"><span class="match-type">GRP B · R15</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">17:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">Veterans</span><span class="match-vs">vs</span><span class="match-team-away">Poro Venom</span></div><div class="match-footer"><span class="match-type">GRP B · R16</span></div></div>    </div>
   </div>
-
   <div class="day-block">
     <div class="day-title day-sun">SUNDAY · MAY 21 — SEMIFINALS & FINALS</div>
     <div class="matches-grid">
-
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div>
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div>
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div>
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 FINAL</span></div></div>
-    </div>
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div><div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 2</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div><div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div><div class="match-card final-s"><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 1</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 FINAL</span></div></div>    </div>
   </div>
-
   <div class="section-title" style="font-size:1.2rem;margin-top:32px">WOMEN&#39;S SCHEDULE</div>
-
   <div class="day-block">
     <div class="day-title day-fri">FRIDAY · MAY 19 — GROUP STAGE</div>
     <div class="matches-grid">
-
-<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Barsaloi Roses</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon Ladies</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Barsaloi Roses</span><span class="match-vs">vs</span><span class="match-team-away">Miami Angels</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Pentagon Ladies</span><span class="match-vs">vs</span><span class="match-team-away">Miami Angels</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Morijo Girls</span><span class="match-vs">vs</span><span class="match-team-away">Samburu Queens</span></div><div class="match-footer"><span class="match-type">GRP B · R1</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Morijo Girls</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika Starlets</span></div><div class="match-footer"><span class="match-type">GRP B · R2</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Samburu Queens</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika Starlets</span></div><div class="match-footer"><span class="match-type">GRP B · R3</span></div></div>
-    </div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Barsaloii Roses</span><span class="match-vs">vs</span><span class="match-team-away">Pentagon Ladies</span></div><div class="match-footer"><span class="match-type">GRP A · R1</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Barsaloii Roses</span><span class="match-vs">vs</span><span class="match-team-away">Miami Angels</span></div><div class="match-footer"><span class="match-type">GRP A · R2</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Pentagon Ladies</span><span class="match-vs">vs</span><span class="match-team-away">Miami Angels</span></div><div class="match-footer"><span class="match-type">GRP A · R3</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Morijo Girls</span><span class="match-vs">vs</span><span class="match-team-away">Samburu Queens</span></div><div class="match-footer"><span class="match-type">GRP B · R1</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Morijo Girls</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika Starlets</span></div><div class="match-footer"><span class="match-type">GRP B · R2</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Samburu Queens</span><span class="match-vs">vs</span><span class="match-team-away">Nkorika Starlets</span></div><div class="match-footer"><span class="match-type">GRP B · R3</span></div></div>    </div>
   </div>
-
   <div class="day-block">
     <div class="day-title day-sun">SUNDAY · MAY 21 — SEMIFINALS & FINALS</div>
     <div class="matches-grid">
-
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div>
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div>
-<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div>
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 FINAL</span></div></div>
-    </div>
+<div class="match-card semi-s"><div class="match-card-header"><span class="match-time">08:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">1st Group A</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group B</span></div><div class="match-footer"><span class="match-type">SEMI 1</span></div></div><div class="match-card semi-s"><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">1st Group B</span><span class="match-vs">vs</span><span class="match-team-away">2nd Group A</span></div><div class="match-footer"><span class="match-type">SEMI 2</span></div></div><div class="match-card semi-s"><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Loser SF1</span><span class="match-vs">vs</span><span class="match-team-away">Loser SF2</span></div><div class="match-footer"><span class="match-type">3rd PLACE</span></div></div><div class="match-card final-s"><div class="match-card-header"><span class="match-time">16:00</span><span class="match-field">COURT 3</span></div><div class="match-teams"><span class="match-team-home">Winner SF1</span><span class="match-vs">vs</span><span class="match-team-away">Winner SF2</span></div><div class="match-footer"><span class="match-type">🏆 FINAL</span></div></div>    </div>
   </div>
-
 </div>
 </div>
-
 <!-- ===== CHESS ===== -->
 <div id="chess" class="section">
 <div class="page">
@@ -645,7 +445,6 @@ nav { background:rgba(7,7,10,0.85); border-bottom:1px solid var(--border); posit
   </div>
 </div>
 </div>
-
 <!-- ===== ATHLETICS ===== -->
 <div id="athletics" class="section">
 <div class="page">
@@ -658,32 +457,16 @@ nav { background:rgba(7,7,10,0.85); border-bottom:1px solid var(--border); posit
   <div class="day-block">
     <div class="day-title day-sat">SATURDAY · MAY 20 — HEATS & QUALIFYING</div>
     <div class="matches-grid">
-
-<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">100m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">200m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">400m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">12:00</span><span class="match-field">FIELD</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Long Jump & Shot Put — Qualifying</span></div><div class="match-footer"><span class="match-type">ATH · QUAL</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">3000m Middle Distance — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
-<div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">4x400m Relay — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>
-    </div>
+<div class="match-card "><div class="match-card-header"><span class="match-time">09:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">100m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">200m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">400m Sprint — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">12:00</span><span class="match-field">FIELD</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Long Jump & Shot Put — Qualifying</span></div><div class="match-footer"><span class="match-type">ATH · QUAL</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">14:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">3000m Middle Distance — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div><div class="match-card "><div class="match-card-header"><span class="match-time">15:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">4x400m Relay — Heats</span></div><div class="match-footer"><span class="match-type">ATH · HEAT</span></div></div>    </div>
   </div>
 
   <div class="day-block">
     <div class="day-title day-sun">SUNDAY · MAY 21 — FINALS</div>
     <div class="matches-grid">
-
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">09:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">100m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">200m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">10:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">400m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">3000m Middle Distance — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">11:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">4x400m Relay — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">12:00</span><span class="match-field">FIELD</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Long Jump · Shot Put · High Jump — FINALS</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
-<div class="match-card final-s"><div class="match-card-header"><span class="match-time">12:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Cross Country — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>
-    </div>
+<div class="match-card final-s"><div class="match-card-header"><span class="match-time">09:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">100m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div><div class="match-card final-s"><div class="match-card-header"><span class="match-time">10:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">200m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div><div class="match-card final-s"><div class="match-card-header"><span class="match-time">10:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">400m Sprint — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div><div class="match-card final-s"><div class="match-card-header"><span class="match-time">11:00</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">3000m Middle Distance — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div><div class="match-card final-s"><div class="match-card-header"><span class="match-time">11:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">4x400m Relay — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div><div class="match-card final-s"><div class="match-card-header"><span class="match-time">12:00</span><span class="match-field">FIELD</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Long Jump · Shot Put · High Jump — FINALS</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div><div class="match-card final-s"><div class="match-card-header"><span class="match-time">12:30</span><span class="match-field">TRACK</span></div><div class="match-teams" style="justify-content:center"><span class="match-team-home" style="text-align:center;flex:none">Cross Country — FINAL</span></div><div class="match-footer"><span class="match-type">ATH · FINAL</span></div></div>    </div>
   </div>
 </div>
 </div>
-
 <!-- ===== MUSIC ===== -->
 <div id="music" class="section">
 <div class="page">
@@ -713,71 +496,359 @@ nav { background:rgba(7,7,10,0.85); border-bottom:1px solid var(--border); posit
   </div>
 </div>
 </div>
-
 <script>
-function activateNav(el){
+// ===== NAVIGATION =====
+function activateNav(el, sectionId){
   document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
   el.classList.add('active');
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  const href=el.getAttribute('href').substring(1);
-  const target=document.getElementById(href);
+  const target = document.getElementById(sectionId);
   if(target){ target.classList.add('active'); window.scrollTo({top:0,behavior:'smooth'}); }
 }
+
+// ===== ADMIN MODAL =====
 function openAdmin(){ document.getElementById('adminModal').classList.add('active'); }
 function closeAdmin(){ document.getElementById('adminModal').classList.remove('active'); document.getElementById('adminError').style.display='none'; }
 function doLogin(){
-  const u=document.getElementById('adminUser').value;
-  const p=document.getElementById('adminPass').value;
-  if(u==='admin'&&p==='admin'){
-    document.getElementById('adminLoginForm').style.display='none';
+  const u = document.getElementById('adminUser').value.trim();
+  const p = document.getElementById('adminPass').value.trim();
+  if(u === 'admin' && p === 'admin'){
+    document.getElementById('adminLoginForm').style.display = 'none';
     document.getElementById('adminPanel').classList.add('active');
-    document.getElementById('adminModalTitle').textContent='🔐 ADMIN PANEL';
+    document.getElementById('adminModalTitle').textContent = '🔐 ADMIN PANEL';
     renderAdminMatches();
   } else {
-    document.getElementById('adminError').style.display='block';
+    document.getElementById('adminError').style.display = 'block';
   }
 }
 function doLogout(){
-  document.getElementById('adminLoginForm').style.display='block';
+  document.getElementById('adminLoginForm').style.display = 'block';
   document.getElementById('adminPanel').classList.remove('active');
-  document.getElementById('adminModalTitle').textContent='🔐 ADMIN LOGIN';
-  document.getElementById('adminUser').value='';
-  document.getElementById('adminPass').value='';
+  document.getElementById('adminModalTitle').textContent = '🔐 ADMIN LOGIN';
+  document.getElementById('adminUser').value = '';
+  document.getElementById('adminPass').value = '';
 }
-function showAdminTab(tab,btn){
-  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+function showAdminTab(tab, btn){
+  document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('adminFootballTab').style.display=tab==='football'?'block':'none';
-  document.getElementById('adminVolleyballTab').style.display=tab==='volleyball'?'block':'none';
+  document.getElementById('adminFootballTab').style.display = tab === 'football' ? 'block' : 'none';
+  document.getElementById('adminVolleyballTab').style.display = tab === 'volleyball' ? 'block' : 'none';
 }
+
+// ===== MATCH DATA =====
+const MATCHES = [];
+let matchIdCounter = 0;
+function addMatch(group, round, time, venue, home, away, sport){
+  MATCHES.push({
+    id: 'm' + (matchIdCounter++),
+    group: group,
+    round: round,
+    time: time,
+    venue: venue,
+    home: home,
+    away: away,
+    sport: sport,
+    homeScore: null,
+    awayScore: null
+  });
+}
+
+// FOOTBALL MEN GROUP STAGE
+addMatch('A', 'R1', '08:00', 'FIELD 1', 'Green Boys Army', 'Mara Virion', 'football');
+addMatch('A', 'R2', '09:00', 'FIELD 2', 'Momida', 'Morijo Soccer', 'football');
+addMatch('A', 'R3', '10:00', 'FIELD 1', 'Green Boys Army', 'Momida', 'football');
+addMatch('A', 'R4', '11:00', 'FIELD 2', 'Mara Virion', 'Morijo Soccer', 'football');
+addMatch('A', 'R5', '14:00', 'FIELD 1', 'Green Boys Army', 'Morijo Soccer', 'football');
+addMatch('A', 'R6', '15:00', 'FIELD 2', 'Mara Virion', 'Momida', 'football');
+addMatch('B', 'R1', '08:00', 'FIELD 1', 'Nkurkur (GSU)', 'Barsaloii', 'football');
+addMatch('B', 'R2', '09:00', 'FIELD 2', 'Winterfell', 'Mini Majors', 'football');
+addMatch('B', 'R3', '10:00', 'FIELD 1', 'Nkurkur (GSU)', 'Winterfell', 'football');
+addMatch('B', 'R4', '11:00', 'FIELD 2', 'Barsaloii', 'Mini Majors', 'football');
+addMatch('B', 'R5', '14:00', 'FIELD 1', 'Nkurkur (GSU)', 'Mini Majors', 'football');
+addMatch('B', 'R6', '15:00', 'FIELD 2', 'Barsaloii', 'Winterfell', 'football');
+addMatch('C', 'R1', '08:00', 'FIELD 1', 'Miami', 'Nkorika', 'football');
+addMatch('C', 'R2', '09:00', 'FIELD 2', 'Luly', 'Morijo senior original', 'football');
+addMatch('C', 'R3', '10:00', 'FIELD 1', 'Miami', 'Luly', 'football');
+addMatch('C', 'R4', '11:00', 'FIELD 2', 'Nkorika', 'Morijo senior original', 'football');
+addMatch('C', 'R5', '14:00', 'FIELD 1', 'Miami', 'Morijo senior original', 'football');
+addMatch('C', 'R6', '15:00', 'FIELD 2', 'Nkorika', 'Luly', 'football');
+addMatch('D', 'R1', '08:00', 'FIELD 1', 'Marti', 'Veterans', 'football');
+addMatch('D', 'R2', '09:00', 'FIELD 2', 'Pentagon', 'Transmillam', 'football');
+addMatch('D', 'R3', '10:00', 'FIELD 1', 'Marti', 'Pentagon', 'football');
+addMatch('D', 'R4', '11:00', 'FIELD 2', 'Veterans', 'Transmillam', 'football');
+addMatch('D', 'R5', '14:00', 'FIELD 1', 'Marti', 'Transmillam', 'football');
+addMatch('D', 'R6', '15:00', 'FIELD 2', 'Veterans', 'Pentagon', 'football');
+addMatch('KO', 'QF1', '14:00', 'FIELD 1', '1st Group A', '2nd Group B', 'football');
+addMatch('KO', 'QF2', '14:00', 'FIELD 2', '1st Group C', '2nd Group D', 'football');
+addMatch('KO', 'QF3', '15:00', 'FIELD 1', '1st Group B', '2nd Group A', 'football');
+addMatch('KO', 'QF4', '15:00', 'FIELD 2', '1st Group D', '2nd Group C', 'football');
+addMatch('KO','SF1','10:00','FIELD 1','Winner QF1','Winner QF2','football');
+addMatch('KO','SF2','10:00','FIELD 2','Winner QF3','Winner QF4','football');
+addMatch('KO','3RD','14:00','FIELD 1','Loser SF1','Loser SF2','football');
+addMatch('KO','FIN','15:00','FIELD 2','Winner SF1','Winner SF2','football');
+addMatch('KO','WF','09:00','FIELD 1','Morijo mix girls','Luxury FC','football');
+addMatch('A','R1','08:00','COURT 1','Momida','Angata','volleyball');
+addMatch('A','R2','08:00','COURT 2','Momida','Marti','volleyball');
+addMatch('A','R3','09:00','COURT 1','Momida','Barsaloi','volleyball');
+addMatch('A','R4','09:00','COURT 2','Momida','Morijo Mix Boys','volleyball');
+addMatch('A','R5','10:00','COURT 1','Angata','Marti','volleyball');
+addMatch('A','R6','10:00','COURT 2','Angata','Barsaloi','volleyball');
+addMatch('A','R7','11:00','COURT 1','Angata','Morijo Mix Boys','volleyball');
+addMatch('A','R8','11:00','COURT 2','Marti','Barsaloi','volleyball');
+addMatch('A','R9','14:00','COURT 1','Marti','Morijo Mix Boys','volleyball');
+addMatch('A','R10','14:00','COURT 2','Barsaloi','Morijo Mix Boys','volleyball');
+addMatch('B','R1','08:00','COURT 1','Veterans','Poro Venom','volleyball');
+addMatch('B','R2','08:00','COURT 2','Veterans','Pentagon','volleyball');
+addMatch('B','R3','09:00','COURT 1','Veterans','Nkorika','volleyball');
+addMatch('B','R4','09:00','COURT 2','Poro Venom','Pentagon','volleyball');
+addMatch('B','R5','10:00','COURT 1','Poro Venom','Nkorika','volleyball');
+addMatch('B','R6','10:00','COURT 2','Pentagon','Nkorika','volleyball');
+addMatch('KO','VSF1','08:00','COURT 1','1st Group A','2nd Group B','volleyball');
+addMatch('KO','VSF2','08:00','COURT 2','1st Group B','2nd Group A','volleyball');
+addMatch('KO','V3RD','14:00','COURT 1','Loser SF1','Loser SF2','volleyball');
+addMatch('KO','VFIN','16:00','COURT 1','Winner SF1','Winner SF2','volleyball');
+addMatch('FA','R1','08:00','COURT 3','Barsaloii Roses','Pentagon Ladies','volleyball');
+addMatch('FA','R2','09:00','COURT 3','Barsaloii Roses','Miami Angels','volleyball');
+addMatch('FA','R3','10:00','COURT 3','Pentagon Ladies','Miami Angels','volleyball');
+addMatch('FB','R1','14:00','COURT 3','Morijo Girls','Samburu Queens','volleyball');
+addMatch('FB','R2','15:00','COURT 3','Morijo Girls','Nkorika Starlets','volleyball');
+addMatch('FB','R3','16:00','COURT 3','Samburu Queens','Nkorika Starlets','volleyball');
+addMatch('KO','FVSF1','08:00','COURT 3','1st Group A','2nd Group B','volleyball');
+addMatch('KO','FVSF2','09:00','COURT 3','1st Group B','2nd Group A','volleyball');
+addMatch('KO','FV3RD','14:00','COURT 3','Loser SF1','Loser SF2','volleyball');
+addMatch('KO','FVFIN','16:00','COURT 3','Winner SF1','Winner SF2','volleyball');
+
+// ===== LOCAL STORAGE =====
+function loadScores(){
+  const saved = localStorage.getItem('olimpiki_scores');
+  if(saved){
+    const data = JSON.parse(saved);
+    MATCHES.forEach(m => {
+      if(data[m.id]){
+        m.homeScore = data[m.id].homeScore;
+        m.awayScore = data[m.id].awayScore;
+      }
+    });
+  }
+}
+function saveScores(){
+  const data = {};
+  MATCHES.forEach(m => {
+    if(m.homeScore !== null && m.awayScore !== null){
+      data[m.id] = { homeScore: m.homeScore, awayScore: m.awayScore };
+    }
+  });
+  localStorage.setItem('olimpiki_scores', JSON.stringify(data));
+}
+
+// ===== STANDINGS LOGIC =====
+function calcStandings(groupTeams, groupMatches){
+  const stats = {};
+  groupTeams.forEach(t => {
+    stats[t] = { mp:0, w:0, d:0, l:0, gf:0, ga:0, pts:0 };
+  });
+  groupMatches.forEach(m => {
+    if(m.homeScore === null || m.awayScore === null) return;
+    const h = m.home;
+    const a = m.away;
+    const hs = parseInt(m.homeScore);
+    const as = parseInt(m.awayScore);
+    stats[h].mp++; stats[a].mp++;
+    stats[h].gf += hs; stats[h].ga += as;
+    stats[a].gf += as; stats[a].ga += hs;
+    if(hs > as){ stats[h].w++; stats[h].pts += 3; stats[a].l++; }
+    else if(as > hs){ stats[a].w++; stats[a].pts += 3; stats[h].l++; }
+    else { stats[h].d++; stats[a].d++; stats[h].pts += 1; stats[a].pts += 1; }
+  });
+  const sorted = groupTeams.map(t => {
+    const s = stats[t];
+    return { team:t, mp:s.mp, w:s.w, d:s.d, l:s.l, gf:s.gf, ga:s.ga, gd:s.gf-s.ga, pts:s.pts };
+  }).sort((a,b) => {
+    if(b.pts !== a.pts) return b.pts - a.pts;
+    if(b.gd !== a.gd) return b.gd - a.gd;
+    return b.gf - a.gf;
+  });
+  return sorted;
+}
+
+function renderStandings(){
+  // Football groups
+  const fbGroups = {'A': ['Green Boys Army', 'Mara Virion', 'Momida', 'Morijo Soccer'], 'B': ['Nkurkur (GSU)', 'Barsaloii', 'Winterfell', 'Mini Majors'], 'C': ['Miami', 'Nkorika', 'Luly', 'Morijo senior original'], 'D': ['Marti', 'Veterans', 'Pentagon', 'Transmillam']};
+  for(const [gname, teams] of Object.entries(fbGroups)){
+    const matches = MATCHES.filter(m => m.sport === 'football' && m.group === gname);
+    const stand = calcStandings(teams, matches);
+    const tbody = document.querySelector('#stand-fb-' + gname.toLowerCase() + ' tbody');
+    if(tbody){
+      tbody.innerHTML = stand.map((s,i) => `
+        <tr>
+          <td class="pos-col">${i+1}</td>
+          <td class="team-name">${s.team}</td>
+          <td>${s.mp}</td>
+          <td>${s.w}</td>
+          <td>${s.d}</td>
+          <td>${s.l}</td>
+          <td>${s.gf}</td>
+          <td>${s.ga}</td>
+          <td>${s.gd}</td>
+          <td class="pts-col">${s.pts}</td>
+        </tr>
+      `).join('');
+    }
+  }
+  // Volleyball men A
+  const vbmA = ['Momida', 'Angata', 'Marti', 'Barsaloi', 'Morijo Mix Boys'];
+  const vbmAMatches = MATCHES.filter(m => m.sport === 'volleyball' && m.group === 'A');
+  const vbmAStand = calcStandings(vbmA, vbmAMatches);
+  const vbmATbody = document.querySelector('#stand-vb-ma tbody');
+  if(vbmATbody){
+    vbmATbody.innerHTML = vbmAStand.map((s,i) => `
+      <tr>
+        <td class="pos-col">${i+1}</td>
+        <td class="team-name">${s.team}</td>
+        <td>${s.mp}</td>
+        <td>${s.w}</td>
+        <td>${s.d}</td>
+        <td>${s.l}</td>
+        <td>${s.gf}</td>
+        <td>${s.ga}</td>
+        <td>${s.gd}</td>
+        <td class="pts-col">${s.pts}</td>
+      </tr>
+    `).join('');
+  }
+  // Volleyball men B
+  const vbmB = ['Veterans', 'Poro Venom', 'Pentagon', 'Nkorika'];
+  const vbmBMatches = MATCHES.filter(m => m.sport === 'volleyball' && m.group === 'B');
+  const vbmBStand = calcStandings(vbmB, vbmBMatches);
+  const vbmBTbody = document.querySelector('#stand-vb-mb tbody');
+  if(vbmBTbody){
+    vbmBTbody.innerHTML = vbmBStand.map((s,i) => `
+      <tr>
+        <td class="pos-col">${i+1}</td>
+        <td class="team-name">${s.team}</td>
+        <td>${s.mp}</td>
+        <td>${s.w}</td>
+        <td>${s.d}</td>
+        <td>${s.l}</td>
+        <td>${s.gf}</td>
+        <td>${s.ga}</td>
+        <td>${s.gd}</td>
+        <td class="pts-col">${s.pts}</td>
+      </tr>
+    `).join('');
+  }
+  // Volleyball women A
+  const vbfA = ['Barsaloii Roses', 'Pentagon Ladies', 'Miami Angels'];
+  const vbfAMatches = MATCHES.filter(m => m.sport === 'volleyball' && m.group === 'FA');
+  const vbfAStand = calcStandings(vbfA, vbfAMatches);
+  const vbfATbody = document.querySelector('#stand-vb-fa tbody');
+  if(vbfATbody){
+    vbfATbody.innerHTML = vbfAStand.map((s,i) => `
+      <tr>
+        <td class="pos-col">${i+1}</td>
+        <td class="team-name">${s.team}</td>
+        <td>${s.mp}</td>
+        <td>${s.w}</td>
+        <td>${s.d}</td>
+        <td>${s.l}</td>
+        <td>${s.gf}</td>
+        <td>${s.ga}</td>
+        <td>${s.gd}</td>
+        <td class="pts-col">${s.pts}</td>
+      </tr>
+    `).join('');
+  }
+  // Volleyball women B
+  const vbfB = ['Morijo Girls', 'Samburu Queens', 'Nkorika Starlets'];
+  const vbfBMatches = MATCHES.filter(m => m.sport === 'volleyball' && m.group === 'FB');
+  const vbfBStand = calcStandings(vbfB, vbfBMatches);
+  const vbfBTbody = document.querySelector('#stand-vb-fb tbody');
+  if(vbfBTbody){
+    vbfBTbody.innerHTML = vbfBStand.map((s,i) => `
+      <tr>
+        <td class="pos-col">${i+1}</td>
+        <td class="team-name">${s.team}</td>
+        <td>${s.mp}</td>
+        <td>${s.w}</td>
+        <td>${s.d}</td>
+        <td>${s.l}</td>
+        <td>${s.gf}</td>
+        <td>${s.ga}</td>
+        <td>${s.gd}</td>
+        <td class="pts-col">${s.pts}</td>
+      </tr>
+    `).join('');
+  }
+}
+
+// ===== ADMIN RENDER =====
 function renderAdminMatches(){
-  const fb=document.getElementById('adminFootballTab');
-  const vb=document.getElementById('adminVolleyballTab');
-  fb.innerHTML='<div style="color:var(--muted);font-size:.85rem;margin-bottom:12px">Click any match to edit scores (demo only)</div>';
-  const matches=[
-    {t:"09:00 · FIELD 1",h:"Morijo mix girls",a:"Luxury FC",id:"wf"},
-    {t:"10:00 · FIELD 1",h:"Winner QF1",a:"Winner QF2",id:"sf1"},
-    {t:"10:00 · FIELD 2",h:"Winner QF3",a:"Winner QF4",id:"sf2"},
-    {t:"15:00 · FIELD 2",h:"Winner SF1",a:"Winner SF2",id:"mf"}
-  ];
-  matches.forEach(m=>{
-    fb.innerHTML+='<div class="admin-match-item"><div class="admin-match-title">'+m.t+'</div><div class="admin-score-inputs"><input type="number" id="s_'+m.id+'_h" placeholder="0"><span style="color:var(--muted)">:</span><input type="number" id="s_'+m.id+'_a" placeholder="0"><button class="admin-save-btn" onclick="saveScore(''+m.id+'')">SAVE</button></div></div>';
+  const fb = document.getElementById('adminFootballTab');
+  const vb = document.getElementById('adminVolleyballTab');
+  fb.innerHTML = '<div style="color:var(--muted);font-size:.85rem;margin-bottom:12px">Enter scores for group matches. Standings update automatically.</div>';
+  const fbMatches = MATCHES.filter(m => m.sport === 'football' && m.group !== 'KO');
+  fbMatches.forEach(m => {
+    const hs = m.homeScore !== null ? m.homeScore : '';
+    const as = m.awayScore !== null ? m.awayScore : '';
+    fb.innerHTML += `
+      <div class="admin-match-item">
+        <div class="admin-match-title">${m.time} · ${m.venue} · GRP ${m.group} · ${m.round}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-weight:600">${m.home}</span>
+          <span style="color:var(--muted)">vs</span>
+          <span style="font-weight:600">${m.away}</span>
+        </div>
+        <div class="admin-score-inputs">
+          <input type="number" id="s_${m.id}_h" value="${hs}" placeholder="0" min="0">
+          <span style="color:var(--muted)">:</span>
+          <input type="number" id="s_${m.id}_a" value="${as}" placeholder="0" min="0">
+          <button class="admin-save-btn" onclick="saveScore('${m.id}')">SAVE</button>
+        </div>
+      </div>
+    `;
   });
-  vb.innerHTML='<div style="color:var(--muted);font-size:.85rem;margin-bottom:12px">Click any match to edit scores (demo only)</div>';
-  const vmatches=[
-    {t:"08:00 · COURT 1",h:"1st Group A",a:"2nd Group B",id:"vsf1"},
-    {t:"08:00 · COURT 2",h:"1st Group B",a:"2nd Group A",id:"vsf2"},
-    {t:"16:00 · COURT 1",h:"Winner SF1",a:"Winner SF2",id:"vf"}
-  ];
-  vmatches.forEach(m=>{
-    vb.innerHTML+='<div class="admin-match-item"><div class="admin-match-title">'+m.t+'</div><div class="admin-score-inputs"><input type="number" id="s_'+m.id+'_h" placeholder="0"><span style="color:var(--muted)">:</span><input type="number" id="s_'+m.id+'_a" placeholder="0"><button class="admin-save-btn" onclick="saveScore(''+m.id+'')">SAVE</button></div></div>';
+  vb.innerHTML = '<div style="color:var(--muted);font-size:.85rem;margin-bottom:12px">Enter scores for group matches. Standings update automatically.</div>';
+  const vbMatches = MATCHES.filter(m => m.sport === 'volleyball' && !m.group.startsWith('KO'));
+  vbMatches.forEach(m => {
+    const hs = m.homeScore !== null ? m.homeScore : '';
+    const as = m.awayScore !== null ? m.awayScore : '';
+    vb.innerHTML += `
+      <div class="admin-match-item">
+        <div class="admin-match-title">${m.time} · ${m.venue} · GRP ${m.group} · ${m.round}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-weight:600">${m.home}</span>
+          <span style="color:var(--muted)">vs</span>
+          <span style="font-weight:600">${m.away}</span>
+        </div>
+        <div class="admin-score-inputs">
+          <input type="number" id="s_${m.id}_h" value="${hs}" placeholder="0" min="0">
+          <span style="color:var(--muted)">:</span>
+          <input type="number" id="s_${m.id}_a" value="${as}" placeholder="0" min="0">
+          <button class="admin-save-btn" onclick="saveScore('${m.id}')">SAVE</button>
+        </div>
+      </div>
+    `;
   });
 }
+
 function saveScore(id){
-  const h=document.getElementById('s_'+id+'_h').value;
-  const a=document.getElementById('s_'+id+'_a').value;
-  alert('Score saved: '+h+' - '+a);
+  const hInput = document.getElementById('s_' + id + '_h');
+  const aInput = document.getElementById('s_' + id + '_a');
+  const h = hInput.value === '' ? null : parseInt(hInput.value);
+  const a = aInput.value === '' ? null : parseInt(aInput.value);
+  const match = MATCHES.find(m => m.id === id);
+  if(match){
+    match.homeScore = h;
+    match.awayScore = a;
+    saveScores();
+    renderStandings();
+    alert('Score saved: ' + match.home + ' ' + (h!==null?h:'-') + ' : ' + (a!==null?a:'-') + ' ' + match.away);
+  }
 }
+
+// ===== INIT =====
+loadScores();
+renderStandings();
 </script>
 </body>
 </html>
